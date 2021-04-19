@@ -1,0 +1,189 @@
+<%- include("partials/header1"); -%>
+<%var loggedin=false;%>
+<%if(user.length==1){loggedin = true;}%>
+<div id="headerlogin">
+  <%if(loggedin!=true){%>
+    <a href="/account" id="login">Login</a>
+    <a href="/accounts" id="signup">Sign Up</a>
+  <%}%>
+  <%if(loggedin==true){%>
+    <div style="display:grid;grid-template-columns:1fr;" class="headeruser">
+      <p id="signup" onclick="userbutton()"><img src="<%=user[0].profile_image%>" alt="not found" height="20" width="20"><%=user[0].username+" "%><i class="arrow down"></i></p>
+      <p id="userinfo" style="display : none;" onclick="myaccount()">My Account</p>
+      <p id="signout" style="display : none;" onclick="signout()">Sign Out</p>
+    </div>
+  <%}%>
+</div>
+<%- include("partials/extra1"); -%>
+<% let typ=type %>
+<% const moviedata=moviedataobject %>
+<main>
+<div class="animeheading" style="height : auto;">
+      <div class="animename">
+          <h3 style="font-weight : 600;"><%=moviedata.title%></h3>
+      </div>
+</div>
+<div class="mainanimepage">
+  <div class="animepage">
+      <div class="leftpicsection">
+        <%if(moviedata.poster_path!=undefined){%>
+        <img src="https://image.tmdb.org/t/p/original<%=moviedata.poster_path%>" height="317px" width="225px"><%}%>
+        <%if(moviedata.poster_path==undefined){%>
+          <img src="https://www.planetf1.com/content/themes/planet/img/no_image.jpg" height="317px" width="225px"><%}%>
+      </div>
+      <div class="middlesectiom">
+        <div class="generalinfo">
+          <div class="animescore">
+            <h3 style="font-size : 18px;"><strong>Vote Average : </strong> <%=moviedata.vote_average%> (<%=moviedata.vote_count%> votes)</h3>
+          </div>
+          <div class="animerating">
+            <h3 style="font-size : 18px;"><strong>Genre : </strong><%moviedata.genres.forEach((item) => {%>
+              <%=item.name%>, <%});%></h3>
+          </div>
+          <div class="animeeps">
+            <h3 style="font-size : 18px;"><strong>Language : </strong> <%=Language%></h3>
+          </div>
+          <div class="animestatus">
+            <h3 style="font-size : 18px;"><strong>Adult rated : </strong>
+              <%if(moviedata.adult==true){%>Yes<%}%>
+              <%if(moviedata.adult==false){%>No<%}%>
+            </h3>
+          </div>
+          <div class="animeairdate">
+            <h3 style="font-size : 18px;"><strong>Release Date : </strong> <%=moviedata.release_date%></h3>
+          </div>
+          <div class="animeduration">
+            <h3 style="font-size : 18px;"><strong>Runtime : </strong> <%=moviedata.runtime%> minutes</h3>
+          </div>
+          <div>
+            <label for="rating"><h3 style="font-size : 18px;"><strong>Your rating : </strong></h3></label>
+            <select name="rate" id="urating" disabled ="disabled">
+              <option value="10">10 (Masterpiece)</option>
+              <option value="9">9 (Great)</option>
+              <option value="8">8 (Very Good)</option>
+              <option value="7">7 (Good)</option>
+              <option value="6">6 (Fine)</option>
+              <option value="5">5 (Average)</option>
+              <option value="4">4 (Bad)</option>
+              <option value="3">3 (Very Bad)</option>
+              <option value="2">2 (Horrible)</option>
+              <option value="1">1 (Appalling)</option>
+           </select>
+           <button id="button1" disabled="disabled">Rate it</button>
+        </div>
+        </div>
+      </div>
+      <div class="rightsection">
+            <div class="animetrailer">
+            </div>
+      </div>
+      <div class="producerstudio" style="margin-right: 5px;">
+        <h3 style="font-size : 18px;background-color: #e1e7f5;padding : 5px 0px 5px 0px;"><strong>Production</strong></h3>
+        <%moviedata.production_companies.forEach(async (item)=>{%>
+          <div style="background-color: whitesmoke;margin-bottom: 10px;">
+            <div class="castmember" style="display: grid; grid-template-columns: 1fr 2fr;">
+                <div class="photocast">
+                  <%if(item.logo_path!=null){%>
+                    <img src="https://image.tmdb.org/t/p/original<%=item.logo_path%>" height="100px" width="75px"><%}%>
+                    <%if(item.logo_path==null){%>
+                      <img src="https://www.planetf1.com/content/themes/planet/img/no_image.jpg" height="100px" width="75px"><%}%>
+                </div>
+                <div class="memberdet">
+                    <div class="charname"><p style="margin-bottom: 0px; font-weight: 600;"><%=item.name%></p></div>
+                </div>
+            </div>
+          </div>
+        <%});%>
+        <h3 style="font-size : 18px;background-color: #e1e7f5;padding : 5px 0px 5px 0px;"><strong>Crew</strong></h3>
+        <div class="cast" style="display: grid;grid-template-columns: 1fr;">
+          <%mcredits.crew.forEach(async (item,i) => {%>
+            <%if(i<=10){%>
+            <div style="background-color: whitesmoke;margin-bottom: 10px;">
+                <div class="castmember" style="display: grid; grid-template-columns: 1fr 2fr;">
+                    <div class="photocast">
+                      <%if(item.profile_path!=null){%>
+                        <img src="https://image.tmdb.org/t/p/original<%=item.profile_path%>" height="100px" width="75px"><%}%>
+                        <%if(item.profile_path==null){%>
+                          <img src="https://www.planetf1.com/content/themes/planet/img/no_image.jpg" height="100px" width="75px"><%}%>
+                    </div>
+                    <div class="memberdet">
+                        <div class="charname"><p style="margin-bottom: 0px; font-weight: 600;"><%=item.name%></p></div>
+                        <div class="department">
+                          <%=item.job%>
+                        </div>
+                    </div>
+                </div>
+              </div>
+              <%}%>
+          <%});%>
+        </div>
+      </div>
+      <div class="story">
+        <h3 style="font-size : 18px;border-bottom: 1.5px black solid;"><strong>Synopsis</strong></h3>
+        <div class="synopsis" style="padding-bottom: 10px;">
+          <%=moviedata.overview%>
+        </div>
+        <h3 style="font-size : 18px;border-bottom: 1.5px black solid;"><strong></strong></h3>
+        <div class="">
+
+        </div>
+      </div>
+      <div style="margin-left: 5px;">
+        <h3 style="font-size : 18px;background-color: #e1e7f5;padding : 5px 0px 5px 0px;"><strong>Cast</strong></h3>
+        <div class="cast" style="display: grid;grid-template-columns: 1fr;">
+          <%mcredits.cast.forEach(async (item,i) => {%>
+            <%if(i<=10){%>
+            <div style="background-color: whitesmoke;margin-bottom: 10px;">
+                <div class="castmember" style="display: grid; grid-template-columns: 1fr 2fr;">
+                    <div class="photocast">
+                      <%if(item.profile_path!=null){%>
+                        <img src="https://image.tmdb.org/t/p/original<%=item.profile_path%>" height="100px" width="75px"><%}%>
+                        <%if(item.profile_path==null){%>
+                          <img src="https://www.planetf1.com/content/themes/planet/img/no_image.jpg" height="100px" width="75px"><%}%>
+                    </div>
+                    <div class="memberdet">
+                        <div class="charname"><p style="margin-bottom: 0px; font-weight: 600;"><%=item.character%></p></div>
+                        <div class="department">
+                          <%if(item.gender==2){%><p>Actor</p><%}%>
+                          <%if(item.gender==1||item.gender==0){%><p>Actress</p><%}%>
+                        </div>
+                    </div>
+                </div>
+                <div class="memname" style="margin-bottom: 5px;">Played by : <p style="margin-bottom: 0px; font-weight: 600;display: inline"><%=item.name%></p></div>
+              </div>
+              <%}%>
+          <%});%>
+        </div>
+      </div>
+  </div>
+</div>
+
+
+</main>
+</div>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+<script src="/scripts/animehome.js"></script>
+<script>
+  var bool=<%-loggedin%>;
+  if(bool)
+  {
+    $("#button1").removeAttr("disabled");
+    $("#urating").removeAttr("disabled");
+    $("#button1").click(function(){
+    var rate=$("#urating").val();
+    $.ajax({
+      url : window.location.href,
+      type : "POST",
+      data : {
+        rating : rate
+      },error : function(err)
+      {
+        console.log(err);
+      }
+    })
+   })
+  }
+</script>
+</html>

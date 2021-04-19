@@ -1,0 +1,151 @@
+/*:root {
+	--primary-color: #e50914;
+	--dark-color: #141414;
+	--light-color: #f4f4f4;
+}*/
+
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	font-family: 'Arial', sans-serif;
+	-webkit-font-smoothing: antialiased;
+	background: #000;
+	color: #999;
+}
+
+ul {
+	list-style: none;
+}
+
+a {
+	color: #fff;
+	text-decoration: none;
+}
+
+p {
+	margin: 0.5rem 0;
+}
+
+
+
+
+.background{
+	position: relative;
+	background: url('https://i.ibb.co/vXqDmnh/background.jpg') no-repeat center center/cover;
+}
+
+.background::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 1;
+	background: rgba(0, 0, 0, 0.6);
+	/*box-shadow: inset 120px 100px 250px #000000, inset -120px -100px 250px #000000;*/
+}
+
+
+.bottom {
+    /*background-image: linear-gradient(135deg, #23144A 0%, #2c385e 0%, #336e6b 100%);
+    box-shadow: inset 20px 50px 250px #000000, inset -20px -50px 250px #000000;*/
+
+   background-image: linear-gradient(to right, #434343 0%, black 100%);
+   background-image: linear-gradient(to top, #434343 0%, black 100%);
+
+
+}
+
+
+.grid-container1 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 20px;
+    grid-template-rows: 400px;
+}
+
+.grid-child-cinehub, .grid-child-otakuhub {
+	border: 5px solid yellow;
+}
+
+
+
+.grid-container2 {
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
+	grid-template-rows: 1fr 1fr;
+	grid-gap: 50px;
+
+}
+
+.grid-container2 > div {
+	background-color: rgba(255, 255, 255, 0.9);
+  	text-align: center;
+  	padding: 20px 0;
+  	font-size: 10px;
+  	border: 3px solid yellow;
+}
+
+
+.btn {
+	display: inline-block;
+	background: var(--primary-color);
+	color: #fff;
+	padding: 0.4rem 1.3rem;
+	font-size: 1rem;
+	text-align: center;
+	border: none;
+	cursor: pointer;
+	margin-right: 0.5rem;
+	transition: opacity 0.2s ease-in;
+	outline: none;
+	box-shadow: 0 1px 0 rgba(0, 0, 0, 0.45);
+	border-radius: 2px;
+}
+
+.btn:hover {
+	opacity: 0.9;
+}
+
+.btn-xl {
+	font-size: 2rem;
+	padding: 1.5rem 2.1rem;
+	text-transform: uppercase;
+}
+
+/*.btn-rounded {
+	border-radius: 5px;
+}*/
+
+
+.footer,
+.footer a {
+	color: #999;
+	font-size: 0.9rem;
+}
+
+.footer .footer-cols {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	grid-gap: 2rem;
+}
+
+.footer li {
+	line-height: 1.9;
+}
+
+
+.footer {
+	margin-top: 2rem;
+	color: #999;
+	background-color: #000;
+	background-image: none;
+	border: 1px solid #333;
+	padding: 1rem 1.2rem;
+	border-radius: 5px;
+}

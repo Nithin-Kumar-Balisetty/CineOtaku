@@ -1,0 +1,105 @@
+<%- include("partials/header"); -%>
+<%var loggedin=false;%>
+<%if(user.length==1){loggedin = true;}%>
+<div id="headerlogin">
+  <%if(loggedin!=true){%>
+    <a href="/account" id="login">Login</a>
+    <a href="/accounts" id="signup">Sign Up</a>
+  <%}%>
+  <%if(loggedin==true){%>
+    <div style="display:grid;grid-template-columns:1fr;" class="headeruser">
+      <p id="signup" onclick="userbutton()"><img src="<%=user[0].profile_image%>" alt="not found" height="20" width="20"><%=user[0].username+" "%><i class="arrow down"></i></p>
+      <p id="userinfo" style="display : none;" onclick="myaccount()">My Account</p>
+      <p id="signout" style="display : none;" onclick="signout()">Sign Out</p>
+    </div>
+  <%}%>
+</div>
+<%- include("partials/extra"); -%>
+<main class="mains">
+<div class="leftmain">
+<h5 class="firsttag" style="text-align:center;">Search results</h5>
+<h5 class="firsttag" style="background-color: #2e51a2; color : white; padding-top : 5px"><p style="display : inline; margin-top : 5px;">Anime Results</p></h5>
+<% let animeobjects=animeobject%>
+<% for(let i=0;i<10;i++){ %>
+<div class="searchitems">
+    <div class="animesearchimg">
+        <img src="<%=animeobjects[i].image_url%>">
+    </div>
+    <div class="animesearchdata">
+        <div class="animetitle">
+            <a href="/otaku/anime/<%=animeobjects[i].mal_id%>" style="text-decoration:none;"><%=animeobjects[i].title%></a> (<%=animeobjects[i].type%>)
+        </div>
+        <div class="animeeps">
+          <%if(animeobjects[i].type=="Movie"){%>
+            <%=animeobjects[i].episodes%> episode<%}%>
+          <%if(animeobjects[i].type!="Movie"){%>
+            <%=animeobjects[i].episodes%> episodes<%}%>
+        </div>
+        <div class="animestory">
+          <%if(animeobjects[i].synopsis==""){%>
+              No synopsis of this item has been added in our database.<%}%>
+          <%if(animeobjects[i].synopsis!=""){%>
+                <%=animeobjects[i].synopsis%><a href="/otaku/anime/<%=animeobjects[i].mal_id%>">Read more</a><%}%>
+        </div>
+        <div class="animerating">
+            <%=animeobjects[i].score%>
+        </div>
+    </div>
+</div>
+<% } %>
+<h5 class="firsttag" style="background-color: #2e51a2; color : white; padding-top : 5px"><p style="display : inline; margin-top : 5px;">Manga Results</p></h5>
+<% let mangaobjects=mangaobject%>
+<% for(let i=0;i<10;i++){ %>
+<div class="searchitems">
+    <div class="animesearchimg">
+        <img src="<%=mangaobjects[i].image_url%>">
+    </div>
+    <div class="animesearchdata">
+        <div class="animetitle">
+            <a href="/otaku/manga/<%=mangaobjects[i].mal_id%>" style="text-decoration:none;"><%=mangaobjects[i].title%></a>
+        </div>
+        <div class="animestory">
+          <%if(mangaobjects[i].synopsis==""){%>
+              No synopsis of this item has been added in our database.<%}%>
+          <%if(mangaobjects[i].synopsis!=""){%>
+                <%=mangaobjects[i].synopsis%><a href="/otaku/manga/<%=mangaobjects[i].mal_id%>">Read more</a><%}%>
+        </div>
+        <div class="animerating">
+            <%=mangaobjects[i].score%>
+        </div>
+    </div>
+</div>
+<% } %>
+</div>
+<div class="rightmain">
+    <h5 class="topairing">Top Airing Anime</h5>
+    <div class="airinganime">
+      <% let airanime = airanimeobject %>
+      <% for(let i=0;i<5;i++) {%>
+        <div class="airing">
+            <div class="number"><%=(i+1)%></div>
+            <div class="imageair"><img src="<%=airanime[i].image_url%>" alt=""></div>
+            <div class="airname"><a href="/otaku/anime/<%=airanime[i].mal_id%>"><%=airanime[i].title%></a></div>
+        </div>
+        <% }%>
+        <h5 class="topairing">Most Popular Anime</h5>
+        <div class="airinganime">
+        <%let popanime=topanimeobject%>
+        <%for(i=0;i<5;i++){%>
+        <div class="airing">
+            <div class="number"><%=(i+1)%></div>
+            <div class="imageair"><img src="<%=popanime[i].image_url%>" alt=""></div>
+            <div class="airname"><a href="/otaku/anime/<%=popanime[i].mal_id%>"><%=popanime[i].title%></a></div>
+        </div>
+        <%}%>
+      </div>
+    </div>
+</div>
+
+
+  </main>
+</div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+<script src="/scripts/animehome.js"></script>
+</html>

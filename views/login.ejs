@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="css/login.css">
+  </head>
+  <body>
+    <%let id="samp";%>
+    <%if(signin==true){id="samp1";}%>
+  <section class="forms-section" id="<%=id%>">
+  <h1 class="section-title">CineOtaku</h1>
+  <div class="forms">
+    <div class="form-wrapper is-active">
+      <button type="button" class="switcher switcher-login">
+        Login
+        <span class="underline"></span>
+      </button>
+      <form name="loginform" class="form form-login" method="post" action="/account">
+        <fieldset>
+          <legend>Please, enter your email and password for login.</legend>
+          <div class="input-block">
+            <label for="login-email">E-mail</label>
+            <input id="login-email" name="lemail" type="email" required>
+          </div>
+          <div class="input-block">
+            <label for="login-password">Password</label>
+            <input id="login-password" name="lpass" type="password" required>
+          </div>
+          <input type="checkbox" onclick="checking('login-password')"><p style="display : inline; font-size : 14px;">Show Password</p>
+        </fieldset>
+        <%if(Credentialwrong==true){%>
+          <p style="color:red;">*Credentials wrong</p>
+          <%}%>
+        <button type="submit" class="btn-login">Login</button>
+      </form>
+    </div>
+    <div class="form-wrapper">
+      <button type="button" class="switcher switcher-signup" id="signup">
+        Sign Up
+        <span class="underline"></span>
+      </button>
+      <form name="signinform" class="form form-signup" method="post" action="/account" onsubmit="return validateForm()">
+        <fieldset>
+          <legend>Please, enter your email, password and password confirmation for sign up.</legend>
+          <div class="input-block">
+            <label for="signup-email">E-mail</label>
+            <input id="signup-email" name="email" type="email" required>
+          </div>
+          <div class="input-block">
+            <label for="signup-username">Username</label>
+            <input id="signup-username" name="username" type="username" required minlength ="6">
+          </div>
+          <div class="input-block">
+            <label for="signup-password">Password</label>
+            <input id="signup-password" name="pass" type="password" required >
+          </div>
+          <input type="checkbox" onclick="checking('signup-password')"><p style="display : inline; font-size : 14px;">Show Password</p>
+          <div class="input-block" style="margin-top : 10px;">
+            <label for="signup-password-confirm">Confirm password</label>
+            <input id="signup-password-confirm" name="confirmpass" type="password" required >
+          </div>
+          <input type="checkbox" onclick="checking('signup-password-confirm')"><p style="display : inline; font-size : 14px;">Show Password</p>
+
+        </fieldset>
+        <%if(alreadyaccount==true){%>
+          <p style="color:red;" id="alexist">*Account with this email already exists</p>
+        <%}%>
+        <%if(alreadyaccountusername==true){%>
+          <p style="color:red;" id="alexist1">*Account with this username already exists</p>
+        <%}%>
+        <button type="submit" class="btn-signup">Continue</button>
+      </form>
+    </div>
+  </div>
+</section>
+  <script type="text/javascript" src="scripts/login.js"></script>
+  </body>
+</html>

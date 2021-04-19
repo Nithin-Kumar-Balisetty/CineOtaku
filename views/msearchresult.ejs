@@ -1,0 +1,113 @@
+<%- include("partials/header1"); -%>
+<%var loggedin=false;%>
+<%if(user.length==1){loggedin = true;}%>
+<div id="headerlogin">
+  <%if(loggedin!=true){%>
+    <a href="/account" id="login">Login</a>
+    <a href="/accounts" id="signup">Sign Up</a>
+  <%}%>
+  <%if(loggedin==true){%>
+    <div style="display:grid;grid-template-columns:1fr;" class="headeruser">
+      <p id="signup" onclick="userbutton()"><img src="<%=user[0].profile_image%>" alt="not found" height="20" width="20"><%=user[0].username+" "%><i class="arrow down"></i></p>
+      <p id="userinfo" style="display : none;" onclick="myaccount()">My Account</p>
+      <p id="signout" style="display : none;" onclick="signout()">Sign Out</p>
+    </div>
+  <%}%>
+</div>
+<%- include("partials/extra1"); -%>
+<main class="mains">
+<div class="leftmain">
+<h5 class="firsttag">Search results</h5>
+<h5 class="firsttag" style="background-color: #2e51a2; color: white;">Movie Results</h5>
+<% let animeobjects=movieobject%>
+<% let l=animeobjects.length%>
+<%if(l==0){ l=0;%>
+  <div style="border-bottom: 1px solid #bebebe;">
+      <h2 style="text-align: center;">No movie results found</h2>
+  </div>
+<%}%>
+<%if(l>10) l=10;%>
+<% for(let i=0;i<l;i++){ %>
+<div class="searchitems">
+    <div class="animesearchimg">
+        <%if(animeobjects[i].poster_path!=null){%>
+        <img src="https://image.tmdb.org/t/p/original<%=animeobjects[i].poster_path%>" height="200px" width="160px"><%}%>
+        <%if(animeobjects[i].poster_path==null){%>
+          <img src="https://www.planetf1.com/content/themes/planet/img/no_image.jpg" height="200px" width="160px"><%}%>
+    </div>
+    <div class="animesearchdata">
+        <div class="animetitle">
+            <a href="/binger/movie/<%=animeobjects[i].id%>"><%=animeobjects[i].title%></a>
+        </div>
+        <div class="animestory">
+            <p style="margin-top:10px;"><%=animeobjects[i].overview.slice(0,250)%> <a href="/otaku/anime/<%=animeobjects[i].mal_id%>">Read more</a></p>
+        </div>
+        <div class="animerating">
+            <p style="margin-bottom:0px; margin-top:10px;">Vote Average: <%=animeobjects[i].vote_average%> (<%=animeobjects[i].vote_count%> votes)</p>
+            <p style="margin-bottom:0px;"><%=animeobjects[i].release_date%></p>
+        </div>
+    </div>
+</div>
+<% } %>
+<h5 class="firsttag" style="background-color: #2e51a2; color: white;">Series Results</h5>
+<% animeobjects=seriesobject; l=animeobjects.length;%>
+<%if(l==0){ l=0;%>
+  <div style="border-bottom: 1px solid #bebebe;">
+      <h2 style="text-align: center;">No series results found</h2>
+  </div>
+<%}%>
+<%if(l>10) l=10;%>
+<% for(let i=0;i<l;i++){ %>
+<div class="searchitems">
+    <div class="animesearchimg">
+        <%if(animeobjects[i].poster_path!=null){%>
+        <img src="https://image.tmdb.org/t/p/original<%=animeobjects[i].poster_path%>" height="200px" width="160px"><%}%>
+        <%if(animeobjects[i].poster_path==null){%>
+          <img src="https://www.planetf1.com/content/themes/planet/img/no_image.jpg" height="200px" width="160px"><%}%>
+    </div>
+    <div class="animesearchdata">
+        <div class="animetitle">
+            <a href="/binger/series/<%=animeobjects[i].id%>"><%=animeobjects[i].original_name%></a>
+        </div>
+        <div class="animestory">
+            <p style="margin-top:10px;"><%=animeobjects[i].overview.slice(0,250)%> <a href="/otaku/anime/<%=animeobjects[i].mal_id%>">Read more</a></p>
+        </div>
+        <div class="animerating">
+            <p style="margin-bottom:0px; margin-top:10px;">Vote Average: <%=animeobjects[i].vote_average%> (<%=animeobjects[i].vote_count%> votes)</p>
+            <p style="margin-bottom:0px;"><%=animeobjects[i].release_date%></p>
+        </div>
+    </div>
+</div>
+<% } %>
+</div>
+<div class="rightmain">
+    <h5 class="topairing">Trending Movies Worldwide</h5>
+    <div class="airinganime">
+    <% for(let i=0;i<5;i++) {%>
+        <div class="airing">
+            <div class="number"><%=(i+1)%></div>
+            <div class="imageair"><img src="https://image.tmdb.org/t/p/w500<%=jsontopmoviesw[i].poster_path%>" alt=""></div>
+            <div class="airname"><a href="/binger/movie/<%=jsontopmoviesw[i].id%>"><%=jsontopmoviesw[i].original_title%></a></div>
+        </div>
+        <%}%>
+        <h5 class="topairing">Trending Series Worldwide</h5>
+        <div class="airinganime">
+        <%for(i=0;i<5;i++){%>
+        <div class="airing">
+            <div class="number"><%=(i+1)%></div>
+            <div class="imageair"><img src="https://image.tmdb.org/t/p/w500<%=jsontopseriesw[i].poster_path%>" alt=""></div>
+            <div class="airname"><a href="/binger/series/<%=jsontopseriesw[i].id%>"><%=jsontopseriesw[i].original_name%></a></div>
+        </div>
+      <%}%>
+    </div>
+</div>
+</div>
+
+
+</main>
+</div>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+</html>

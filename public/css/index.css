@@ -1,0 +1,408 @@
+.webpage{
+    margin: 0 auto;
+    position:relative;
+    width: 1200px;
+}
+#topheader{
+    font-family: Verdana, Arial, Helvetica, sans-serif, Tahoma, sans-serif;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 15px 0px 2px;
+    height:45px
+}
+#logo{
+    color: #1d439b;
+    text-decoration: none;
+    text-align: left;
+    font-size: 25px;
+}
+#headerlogin{
+    text-align: right;
+}
+#headerlogin a{
+    text-decoration: none;
+    display: inline-block;
+    border: #2e51a2 2px solid;
+    text-align: center;
+    border-radius: 2px;
+    margin-left: 8px;
+    width: 90px;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 4px 0px;
+    color: #1d439b;
+}
+.headeruser p{
+  float: right;
+  margin-left: auto;
+  cursor: pointer;
+}
+.arrow {
+  border: solid black;
+  border-width: 0 3px 3px 0;
+  display: inline-block;
+  padding: 3px;
+}
+.down{
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+}
+#signout,#userinfo{
+  text-decoration : none;
+  z-index :1;
+  background-color: whitesmoke;
+  display: none;
+}
+#login:hover , #signup:hover{
+    background-color: whitesmoke
+}
+
+nav{
+    height: 34px;
+    background-color: #2e51a2;
+}
+.navleft{
+  
+}
+.navleft ul li{
+    display: block;
+    float: left;
+    list-style: none;
+    font-family: Verdana, Arial, Helvetica, sans-serif, Tahoma, sans-serif;
+}
+.navleft ul li a{
+    font-size: 13px;
+    font-weight: 700;
+    padding: 8px 16px 0px;
+    color: #fff;
+    display: block;
+    text-decoration: none;
+    height: 34px;
+}
+.navleft ul li a:hover{
+  background-color: #fff;
+  color: black;
+}
+.navright{
+    height: 34px;
+    position: relative;
+    float: right;
+}
+.searchbar{
+    box-sizing: border-box;
+    height: 34px;
+}
+.search{
+    height: 24px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    font-weight: 600;
+    border: 1px solid grey;
+    width: 80%;
+    background: #f1f1f1;
+}
+.searchbar button {
+    float :right;
+    height: 24px;
+    padding-top: 0px;
+
+    margin-top: 5px;
+    margin-right: 51.5px;
+    width: 33px;
+    background: #e1e7f5;
+    color: #2e51a2;
+    border: 1px solid grey;
+    border-left: none;
+    cursor: pointer;
+}
+.searchbar button i{
+  padding: 0px 2px;
+  font-size: 15px;
+}
+.searchbar button:hover {
+    background :#e1e7f5;
+}
+.searchbar::after {
+    content: "";
+    clear: both;
+    display: table
+}
+.mains{
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+}
+.leftmain{
+    width: 900px;
+    word-wrap: break-word;
+    height :auto;
+    border: 2px  solid #bebebe;
+    border-top: 0px ;
+}
+.rightmain{
+    width: 300px;
+    word-wrap: break-word;
+    height :auto;
+    border: 2px  solid #bebebe;
+    border-top: 0px ;
+    border-left: 0px;
+}
+.firsttag{
+    font-family: Verdana,Arial;
+    font-weight: 550 ;
+    font-size: 15px;
+    color: #000;
+    margin-top: 5px;
+    padding-left: 5px;
+    padding-bottom: 5px;
+    border-bottom: 2px #bebebe solid;
+}
+.topairing{
+    font-family: Verdana,Arial;
+    font-weight: 550 ;
+    font-size: 15px;
+    color: #000;
+    margin-bottom: 0px;
+    padding:6px 0px;
+    padding-left: 5px;
+    background-color: #dde1ec;
+}
+.airinganime{
+    display: grid;
+    grid-template-columns: 1fr;
+    word-wrap: break-word;
+    background-color: #f5f6f9;
+}
+.airing{
+    display: grid;
+    grid-template-columns: 0.5fr 2fr 3fr;
+    margin : 20px 0px;
+    font-size: 15px;
+}
+.airing1{
+  display: grid;
+  grid-template-columns: 0.5fr 2fr 3fr 2fr 0.5fr;
+  margin-top: 10px;
+  font-size: 15px;
+}
+.airing img{
+    padding-left: 20px;
+    height: 100px;
+}
+.airing .number{
+    color: #7f7f7f;
+    font-weight: 700;
+    padding-left: 10px;
+}
+.searchitems{
+  margin-top: 5px;
+  display: grid;
+  grid-template-columns: 1fr 4fr;
+  height: auto;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #bebebe;
+}
+.animesearchimg img{
+  height: 200px;
+  width : 160px;
+}
+.animepage{
+  display: grid;
+  grid-template-columns: 1fr 3fr 1fr;
+}
+.mainanimepage{
+    display: grid;
+    grid-template-columns: 1fr;
+    margin-top: 10px;
+}
+.newsitems{
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+}
+.titlepost{
+  display: grid;
+  grid-template-columns: 1fr;
+}
+.leftpicsection{
+}
+.middlesection{
+}
+.animeheading{
+  background-color: #e1e7f5;
+  position: relative;
+}
+.animename{
+  font-size: 25px;
+  height: auto;
+}
+.airing a
+{
+  text-decoration: none;
+}
+.comments{
+  display: grid;
+  grid-template-columns: 1fr;
+}
+.seasondet{
+  background-color: whitesmoke;
+  padding : 10px 10px;
+  margin-bottom: 10px;
+}
+.post{
+  margin-top: 10px;
+  margin-left: 50px
+}
+.reply
+{
+  display: none;
+  margin-left: 30px;
+}
+#button1{
+  background-color: lightblue;
+}
+.table{
+ 
+}
+.tablerows{
+  height : 30px;
+  background-color:#2e51a2;
+}
+.tr{
+  color: white;
+  text-align: center; 
+}
+.pagecount{
+  margin : 0 auto;
+  text-align: center;
+}
+.pagecount a{
+  font-size: 1.5rem;
+ float: left;
+ padding: 0 10px;
+}
+.pagecount a{
+  text-decoration: none;
+  color: #000;
+}
+.pagecount a:hover{
+  background-color: #2e51a2;
+  color: white;
+}
+
+
+
+.navbar-login
+{
+    width: 305px;
+    padding: 10px;
+    padding-bottom: 0px;
+}
+
+.navbar-login-session
+{
+    padding: 10px;
+    padding-bottom: 0px;
+    padding-top: 0px;
+}
+
+.icon-size
+{
+    font-size: 87px;
+}
+.profilepic img{
+  display: block;
+  margin: 0px auto;
+  margin-top: 50px;
+  border-radius: 50%;
+}
+.cpp
+{
+  display: block;
+  margin: 0px auto;
+  margin-top: 20px;
+  background-color: #2e51a2;
+  color: white;
+}
+.middle {
+  text-align: center;
+  font-size: 16px;
+  margin-top: 20px;
+}
+.middle:last-child{
+  border-bottom: 2px #bebebe solid;
+}
+.fourtypes{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  border-bottom: 2px #bebebe solid;
+}
+.fourtypes p{
+  border-right: 2px #bebebe solid;
+  text-align: center;
+  margin-bottom: 0px;
+  font-size: 18px;
+}
+.fourtypes p:first-child{
+  border-left: 2px #bebebe solid;
+}
+.fourtypes p:hover{
+  background-color: #2e51a2;
+  color: white;
+}
+.removecl{
+  background-color: #2e51a2;
+  color: white; 
+}
+.movieratings{
+  
+}
+.seriesratings{
+  display: none;
+}
+.animeratings{
+  display: none;
+}
+.mangaratings{
+  display: none;
+}
+.gridsystem1{
+  display: grid;
+  grid-template-columns: 0.5fr 1fr 2fr 0.5fr 1fr;
+  margin-bottom: 0px;
+}
+.gridsystem1 p{
+  text-align: center;
+  margin-bottom: 0px;
+  border-right: 2px #bebebe solid;
+  border-bottom: 2px #bebebe solid;
+}
+.gridsystem1 p:first-child{
+  border-left: 2px #bebebe solid;
+}
+.grid1 p{
+  text-align: center;
+}
+.grid2{
+  display: grid;
+  grid-template-columns: 0.5fr 1fr 2fr 0.5fr 1fr;
+}
+.grid2 div{
+  text-align: center;
+  margin-bottom: 0px;
+  border-right: 2px #bebebe solid;
+  border-bottom: 2px #bebebe solid;
+}
+.grid2 div:first-child{
+  border-left: 2px #bebebe solid;
+  margin-bottom: 0px;
+}
+.articletitle{
+  font-size: 20px;
+  font-family: 'Times New Roman', Times, serif;
+}
+.posteddate{
+  margin-top: 5px;
+  font-family: 'Times New Roman', Times, serif;
+}
+.postauthor{
+  font-family: 'Times New Roman', Times, serif;
+}

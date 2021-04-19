@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testing</title>
+</head>
+<body>
+        <%let str="<a href='https://www.google.com'> Click Me </a>"%>
+        <div id="heading1"><%- str %></div>
+        <input type="text" placeholder="Enter name" id="text1" >
+        <input type="text" placeholder="lastname" id="text2" >
+        <button type="submit" id="nutton">CLick Me</button>
+        <%arr.forEach(async (item)=>{%>
+            <div>
+                <%=item.fname%>
+                <%=item.lname%>
+            </div>
+        <%});%>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+   document.getElementById("nutton").addEventListener("click",function(){
+        $.ajax({
+            url : "/test",
+            type : "POST",
+            data : {
+                fname : document.getElementById("text1").value,
+                lname : document.getElementById("text2").value
+            },
+            success : function(data){
+                console.log(data);  
+            }
+            });
+            document.getElementById("text1").value="";
+            document.getElementById("text2").value="";
+    });
+            
+</script>
+</html>

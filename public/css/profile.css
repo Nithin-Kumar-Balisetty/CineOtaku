@@ -1,0 +1,41 @@
+body{
+    background-image: url('Images_css/Movie.jpg');
+}
+.centre {
+    position: absolute;
+    top: 50%; right: 50%;
+    transform: translate(50%,-50%);
+    color: black;
+    z-index: 20;
+    background-color: white;
+    height: 500px;
+    width: 400px;
+    border-radius: 5% ;
+}
+.profile_image img{
+    display: block;
+    margin: 0px auto;
+    margin-top: 40px;
+}
+.buttonchange button{
+    display: block;
+    margin: 0px auto;
+    margin-top: 50px;
+    font-size: large;
+    color: white;
+    background-color: #2e51a2;
+}
+.submitform form{
+    display: block;
+    margin-left: 45px;
+    margin-top: 80px;
+}
+.buttonch button
+{
+    display: block;
+    margin: 0px auto;
+    margin-top: 10px;
+    font-size: large;
+    color: white;
+    background-color: #2e51a2;
+}
