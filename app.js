@@ -57,6 +57,7 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
 const ISO6391 = require('iso-639-1');
+
 const { RSA_NO_PADDING } = require("constants");
 app.get("/otaku",async (req,res) => {
     let topanimeresponse = await fetch("https://api.jikan.moe/v3/top/anime/1/bypopularity");
@@ -200,9 +201,9 @@ app.get("/binger/series/:seriesid",async(req,res)=>
         res.render("seriespage",{moviedataobject : jsonseriesdata,type : "series",Language : ISO6391.getName(jsonseriesdata.original_language),scredits : scredits,user : newuser});
     });
 });
-app.listen(process.env.PORT||4500,function(req,res)
+app.listen(process.env.PORT||2150,function(req,res)
 {
-  console.log("Running server on port 4500");
+  console.log("Running server on port 2150");
 });
 //at post place all the render templates and kepp the get route empty 
 //so that it redirects to the homepage again like all the main websites do
@@ -243,7 +244,7 @@ app.post("/account",async(req,res)=>{
     });
     if(login[0]=="1"){
         login.pop();
-        res.redirect("/");
+        res.redirect("/myaccount");
     }
     else
     {
@@ -754,12 +755,21 @@ app.post("/binger/series/:seriesid",async (req,res)=>{
     }
   })
 });
-//const userratingschema=new Schema({
-  //email : String,
-  //animerating : [{animeid :  Number,rating : Number}],
-  //mangarating : [{mangaid :  Number,rating : Number}],
-  //movierating : [{movieid :  Number,rating : Number}],
-  //seriesrating : [{seriesid :  Number,rating : Number}]
-//});
-//(new userrating({email : "team27@gmail.com",animerating : [],mangarating : [],movierating : [],seriesrating : []})).save();
-//(new userrating({email : "mass@gmail.com",animerating : [],mangarating : [],movierating : [],seriesrating : []})).save();
+app.get("/accpasschange",async (req,res)=>{
+  if(newuser.lenght==0)
+    res.status(404).send("Cannot GET /accpasschange");
+  else
+    res.render("password");
+});
+app.post("/accpasschange", function(req,res){
+  user.updateOne({"email" : newuser[0].email},{$set : {"password" : md5(req.body.pass)}},function(err){
+    if(err){
+      console.log("password updation error");
+      res.redirect("/myaccount");
+    }
+    else
+    {
+      res.redirect("/myaccount");
+    }
+  })
+});

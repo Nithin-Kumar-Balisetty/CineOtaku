@@ -8,7 +8,7 @@
   <%}%>
   <%if(loggedin==true){%>
     <div style="display:grid;grid-template-columns:1fr;" class="headeruser">
-      <p id="signup" onclick="userbutton()"><img src="<%=user[0].profile_image%>" alt="not found" height="20" width="20"><%=user[0].username+" "%><i class="arrow down"></i></p>
+      <p id="signup" onclick="userbutton()"><img src="<%=user[0].profile_image%>" alt="not found" height="25" width="20"><%=user[0].username+" "%><i class="arrow down"></i></p>
       <p id="userinfo" style="display : none;" onclick="myaccount()">My Account</p>
       <p id="signout" style="display : none;" onclick="signout()">Sign Out</p>
     </div>

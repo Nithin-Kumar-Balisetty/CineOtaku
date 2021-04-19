@@ -8,7 +8,7 @@
   <%}%>
   <%if(loggedin==true){%>
     <div style="display:grid;grid-template-columns:1fr;" class="headeruser">
-      <p id="signup" onclick="userbutton()"><img src="<%=user[0].profile_image%>" alt="not found" height="20" width="20"><%=user[0].username+" "%><i class="arrow down"></i></p>
+      <p id="signup" onclick="userbutton()"><img src="<%=user[0].profile_image%>" alt="not found" height="25" width="20"><%=user[0].username+" "%><i class="arrow down"></i></p>
       <p id="userinfo" style="display : none;" onclick="myaccount()">My Account</p>
       <p id="signout" style="display : none;" onclick="signout()">Sign Out</p>
     </div>
@@ -37,8 +37,10 @@
             <h3 style="font-size : 18px;"><strong>Vote Average : </strong> <%=moviedata.vote_average%> (<%=moviedata.vote_count%> votes)</h3>
           </div>
           <div class="animerating">
-            <h3 style="font-size : 18px;"><strong>Genre : </strong><%moviedata.genres.forEach((item) => {%>
+            <%if(typeof moviedata.genres !="undefined"){%>
+            <h3 style="font-size : 18px;"><strong>Genre : </strong><%moviedata.genres.forEach(async (item)=>{%>
               <%=item.name%>, <%});%></h3>
+            <%}%>
           </div>
           <div class="animeeps">
             <h3 style="font-size : 18px;"><strong>Language : </strong> <%=Language%></h3>
@@ -59,7 +61,8 @@
             <h3 style="font-size : 18px;"><strong>Aired : </strong> <p id="airdate" style="display: inline;"><%=moviedata.first_air_date%></p> to <p id="lastdate" style="display: inline;"><%=moviedata.last_air_date%></p></h3>
           </div>
           <div class="animeduration">
-            <h3 style="font-size : 18px;"><strong>Episode Runtime : </strong> <%=moviedata.episode_run_time[0]%> minutes</h3>
+            <%if(typeof moviedata.episode_run_time !="undefined"){%>
+            <h3 style="font-size : 18px;"><strong>Episode Runtime : </strong> <%=moviedata.episode_run_time[0]%> minutes</h3><%}%>
           </div>
           <div>
             <label for="rating"><h3 style="font-size : 18px;"><strong>Your rating : </strong></h3></label>
@@ -85,6 +88,7 @@
       </div>
       <div class="producerstudio" style="margin-right: 5px;">
         <h3 style="font-size : 18px;background-color: #e1e7f5;padding : 5px 0px 5px 0px;"><strong>Production</strong></h3>
+        <%if(typeof moviedata.production_companies!="undefined"){%>
           <%moviedata.production_companies.forEach(async (item)=>{%>
             <div style="background-color: whitesmoke;margin-bottom: 10px;">
               <div class="castmember" style="display: grid; grid-template-columns: 1fr 2fr;">
@@ -100,8 +104,10 @@
               </div>
             </div>
           <%});%>
+          <%}%>
           <h3 style="font-size : 18px;background-color: #e1e7f5;padding : 5px 0px 5px 0px;"><strong>Crew</strong></h3>
           <div class="cast" style="display: grid;grid-template-columns: 1fr;">
+            <%if(typeof scredits.crew!="undefined"){%>
             <%scredits.crew.forEach(async (item,i) => {%>
               <%if(i<=10){%>
               <div style="background-color: whitesmoke;margin-bottom: 10px;">
@@ -122,6 +128,7 @@
                 </div>
                 <%}%>
             <%});%>
+            <%}%>
           </div>
       </div>
       <div class="story">
@@ -130,6 +137,7 @@
           <%=moviedata.overview%>
         </div>
         <div class="Seasonanalysis" style="margin-top:10px;">
+          <%if(typeof moviedata.seasons!="undefined"){%>
             <%moviedata.seasons.forEach(async (item,i)=>{%>
               <%if(i<=10){%>
                 <div class="seasondet <%=i%>" onclick="seasonclick('<%=i%>')">
@@ -157,11 +165,13 @@
                 </div>
               <%}%>
             <%})%>
+            <%}%>
         </div>
       </div>
       <div style="margin-left: 5px;">
         <h3 style="font-size : 18px;background-color: #e1e7f5;padding : 5px 0px 5px 0px;"><strong>Cast</strong></h3>
         <div class="cast" style="display: grid;grid-template-columns: 1fr;">
+          <%if(typeof scredits.cast!="undefined"){%>
           <%scredits.cast.forEach(async (item,i) => {%>
             <div style="background-color: whitesmoke;margin-bottom: 10px;">
                 <div class="castmember" style="display: grid; grid-template-columns: 1fr 2fr;">
@@ -182,6 +192,7 @@
                 <div class="memname" style="margin-bottom: 5px;">Played by : <p style="margin-bottom: 0px; font-weight: 600;display: inline"><%=item.name%></p></div>
               </div>
           <%});%>
+          <%}%>
         </div>
       </div>
   </div>
@@ -192,6 +203,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="/scripts/animehome.js"></script>
 <script >
 function airdate(s)
 {
@@ -232,7 +244,9 @@ var bool=<%-loggedin%>;
       {
         console.log(err);
       }
-    })
+    }).done(function(data){
+      document.getElementById("button1").innerText="Rated "+data.rating;
+    });
    })
   }
 </script>

@@ -8,7 +8,7 @@
   <%}%>
   <%if(loggedin==true){%>
     <div style="display:grid;grid-template-columns:1fr;" class="headeruser">
-      <p id="signup" onclick="userbutton()"><img src="<%=user[0].profile_image%>" alt="not found" height="20" width="20"><%=user[0].username+" "%><i class="arrow down"></i></p>
+      <p id="signup" onclick="userbutton()"><img src="<%=user[0].profile_image%>" alt="not found" height="25" width="20"><%=user[0].username+" "%><i class="arrow down"></i></p>
       <p id="userinfo" style="display : none;" onclick="myaccount()">My Account</p>
       <p id="signout" style="display : none;" onclick="signout()">Sign Out</p>
     </div>
@@ -18,24 +18,26 @@
 <main class="mains">
 <div class="leftmain">
 <h5 class="firsttag">News</h5>
-<%postdetails.forEach((item) => {%>
+<%if(postdetails.length>=1){%>
+<%for(var i=postdetails.length-1;i>=0;i--){%>
   <div class="newsitems" style="margin-bottom: 10px;">
     <div class="articleimg">
-      <img src="<%=item.postimg%>" height="200px" width="200px">
+      <img src="<%=postdetails[i].postimg%>" height="200px" width="200px">
     </div>
     <div class="titlepost">
       <div class="articletitle">
-          <a href="/binger/news/<%=item.postid%>"><%=item.posttitle%></a>
+          <a href="/binger/news/<%=postdetails[i].postid%>"><%=postdetails[i].posttitle%></a>
       </div>
       <div class="articlecontent">
-        <%-item.postdata%>
+        <%-postdetails[i].postdata.slice(0,350)%>
       </div>
       <div>
-        <%=item.postdate+" IST"%>
+        <%=postdetails[i].postdate+" IST"%>
       </div>
     </div>
   </div>
-  <%})%>
+  <%}%>
+  <%}%>
 </div>
 <div class="rightmain">
     <h5 class="topairing">Trending Movies Worldwide</h5>

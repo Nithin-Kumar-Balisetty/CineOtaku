@@ -8,7 +8,7 @@
   <%}%>
   <%if(loggedin==true){%>
     <div style="display:grid;grid-template-columns:1fr;" class="headeruser">
-      <p id="signup" onclick="userbutton()"><img src="<%=user[0].profile_image%>" alt="not found" height="20" width="20"><%=user[0].username+" "%><i class="arrow down"></i></p>
+      <p id="signup" onclick="userbutton()"><img src="<%=user[0].profile_image%>" alt="not found" height="25" width="20"><%=user[0].username+" "%><i class="arrow down"></i></p>
       <p id="userinfo" style="display : none;" onclick="myaccount()">My Account</p>
       <p id="signout" style="display : none;" onclick="signout()">Sign Out</p>
     </div>
@@ -20,21 +20,21 @@
     <h5 class="firsttag" style="text-align: center;">NEWS POST</h5>
     <div class="newsitems" style="grid-template-columns: 1fr;">
      <%if(postdetails!=null){%>
-      <div class="articletitle">
+      <div class="articletitle" style="display: block; margin-left:10px; margin-right: 10px;">
             <%=postdetails.posttitle%>
         </div>
-        <div class="posteddate">
+        <div class="posteddate" style="display: block; margin-left:10px; margin-right: 10px;">
           <p style="display: inline; font-weight: 600;">Posted on : </p>
           <p style="margin-left: 5px; display: inline"><%=postdetails.postdate%></p>
         </div>
-        <div class="postauthor">
+        <div class="postauthor" style="display: block; margin-left:10px; margin-right: 10px;">
           <p style="display: inline;font-weight: 600;">Posted by : </p>
           <p style="margin-left: 5px; display: inline"><%=postdetails.postauthor%></p>
         </div>
-        <div class="articleimg">
-          <img src="<%=postdetails.postimg%>" alt="Image not folun" height="500" width="500">
+        <div class="articleimg" style="margin-top: 25px;display: block;margin-left: auto;margin-right: auto;">
+          <img src="<%=postdetails.postimg%>" alt="Image not found" height="500" width="800">
         </div>
-        <div class="articlecontent">
+        <div class="articlecontent1" style="margin-top: 40px;display: block; margin-left:10px; margin-right: 10px;">
           <%- postdetails.postdata %>
         </div>
       <%}%>

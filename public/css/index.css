@@ -84,8 +84,6 @@ nav{
   color: black;
 }
 .navright{
-    height: 34px;
-    position: relative;
     float: right;
 }
 .searchbar{
@@ -98,16 +96,14 @@ nav{
     margin-bottom: 5px;
     font-weight: 600;
     border: 1px solid grey;
-    width: 80%;
     background: #f1f1f1;
 }
-.searchbar button {
+.navright button {
     float :right;
     height: 24px;
     padding-top: 0px;
-
     margin-top: 5px;
-    margin-right: 51.5px;
+    margin-right: 44px;
     width: 33px;
     background: #e1e7f5;
     color: #2e51a2;
@@ -405,4 +401,8 @@ nav{
 }
 .postauthor{
   font-family: 'Times New Roman', Times, serif;
+}
+.articlecontent a{
+  text-decoration: none;
+  color: #000;
 }
