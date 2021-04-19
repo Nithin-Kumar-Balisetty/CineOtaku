@@ -71,12 +71,12 @@ header {
 
 
 
-.webpage{
+/*.webpage{
     margin: 0 ;
     position:relative;
 
     width: 100%;
-}
+}*/
 
 .top-container {
 	height: 500px;
@@ -85,21 +85,23 @@ header {
 	display: block;
 	/*background: black;*/
 	margin-bottom: 0;
-	background: url('Images_css/newconnectwork.jpg');
+	background:url('images/newconnectwork.jpg');
+
+	
+
 	/*box-shadow: inset 200px 300px 250px #000000, inset -200px -300px 250px #000000;*/
-	box-shadow: inset 200px 150px 300px #000000, inset -200px -150px 300px #000000;
+	box-shadow: inset 200px 150px 400px #000000, inset -200px -150px 400px #000000;
 
 }
 
 .image-container {
 	position: relative;
 	display: block;
+	background: url('Images_css/backimage.jpg') no-repeat center center/cover;
 	height: 500px;
 	width: 900px;
 	margin: 0 auto 0;
 	top: 0;
-	background: url('Images_css/backimage.jpg') no-repeat center center/cover;
-	
 
 }
 
@@ -161,9 +163,12 @@ header {
 
 .mid-container {
 	height: 540px;
-	background: url('Images_css/newconnectwork.jpg');
+
 	/*box-shadow: inset 200px 300px 250px #000000, inset -200px -300px 250px #000000;*/
 	box-shadow: inset 200px 100px 200px #000000, inset -200px -100px 200px #000000;
+	background-image: /*url('images/brbdnew.png'), url('images/newironman.png'),*/url('Images_css/newconnectwork.jpg');
+	/*background-repeat: no-repeat, no-repeat, repeat;
+	background-position: 35px 170px;*/
 }
 
 .mid-container > div > p {
@@ -291,7 +296,7 @@ span {
 
 
 ul > li > a {
-
+	/*font-family: roboto;*/
 	color: #b6fff9;
 	font-size: 1.1rem;
 }
@@ -324,3 +329,72 @@ ul > li > a {
 
 }
 
+.insta {
+
+	height:20px;
+	width:20px;
+
+}
+
+.insta:hover {
+	cursor: pointer;
+}
+
+@media only screen and (max-width: 600px) {
+	.grid-container {
+		display: block;
+	}
+
+	.grid-container > div {
+		margin-top: 10px;
+		font-size: 15px;
+
+	}
+
+
+	.bottom-container {
+		height: 720px;	
+	}
+
+	.mid-container {
+		height: 600px;
+	}
+
+	span {
+		font-size: 20px;
+	}
+
+	.image-container {
+		background: url('Images_css/backimage.jpg') no-repeat center center/cover;
+		height: 350px;
+		width: 450px;
+	}
+
+	.footer {
+		padding: 0px;
+		height: 150px;
+	}
+
+	/*.webpage {
+		height: 100%;
+	}*/
+}
+
+@media only screen and (max-width: 925px) and (min-width: 601px) {
+	.bottom-container {
+		height: 200%;
+	}
+
+	.grid-container > div {
+		font-size: 15px;
+	}
+
+	span {
+		font-size: 18px;
+	}
+
+	.footer {
+		padding: 0px;
+		height: 150px;
+	}
+}

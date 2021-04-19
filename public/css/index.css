@@ -315,8 +315,11 @@ nav{
   display: block;
   margin: 0px auto;
   margin-top: 20px;
+  border-radius: 0.8rem;
+  border-style: none;
   background-color: #2e51a2;
   color: white;
+  padding: 2px 8px 4px 8px;
 }
 .middle {
   text-align: center;
@@ -390,6 +393,10 @@ nav{
 .grid2 div:first-child{
   border-left: 2px #bebebe solid;
   margin-bottom: 0px;
+}
+.grid2 img{
+  display: block;
+  margin: 20px auto;
 }
 .articletitle{
   font-size: 20px;
