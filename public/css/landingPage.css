@@ -90,7 +90,7 @@ header {
 	
 
 	/*box-shadow: inset 200px 300px 250px #000000, inset -200px -300px 250px #000000;*/
-	box-shadow: inset 200px 150px 400px #000000, inset -200px -150px 400px #000000;
+	box-shadow: inset 200px 200px 300px #000000, inset -200px -200px 300px #000000;
 
 }
 
@@ -165,7 +165,7 @@ header {
 	height: 540px;
 
 	/*box-shadow: inset 200px 300px 250px #000000, inset -200px -300px 250px #000000;*/
-	box-shadow: inset 200px 100px 200px #000000, inset -200px -100px 200px #000000;
+	box-shadow: inset 200px 200px 200px #000000, inset -200px -200px 200px #000000;
 	background-image: /*url('images/brbdnew.png'), url('images/newironman.png'),*/url('Images_css/newconnectwork.jpg');
 	/*background-repeat: no-repeat, no-repeat, repeat;
 	background-position: 35px 170px;*/
