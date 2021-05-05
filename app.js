@@ -13,7 +13,7 @@ require('dotenv').config()
 const jsnop=require("parse-jsonp");
 mongo.connect(process.env.MONGODB_URI||process.env.MONGOCLUSTER,{useNewUrlParser : true,useUnifiedTopology : true});
 var Schema = mongo.Schema;
-const User= require("./User")
+const User= require("./dbmodels/User")
 const articleschema=new Schema({
   postid : Number,
   postauthor :  String,
