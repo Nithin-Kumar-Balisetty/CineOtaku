@@ -1,14 +1,14 @@
 <%- include("partials/header"); -%>
 <%var loggedin=false;%>
-<%if(user.length==1){loggedin = true;}%>
+<%if(typeof user.email!="undefined"){loggedin = true;}%>
 <div id="headerlogin">
   <%if(loggedin!=true){%>
-    <a href="/account" id="login">Login</a>
-    <a href="/accounts" id="signup">Sign Up</a>
+    <a href="/login" id="login">Login</a>
+    <a href="/signup" id="signup">Sign Up</a>
   <%}%>
   <%if(loggedin==true){%>
     <div style="display:grid;grid-template-columns:1fr;" class="headeruser">
-      <p id="signup" onclick="userbutton()"><img src="<%=user[0].profile_image%>" alt="not found" height="25" width="20"><%=user[0].username+" "%><i class="arrow down"></i></p>
+      <p id="signup" onclick="userbutton()"><img src="<%=user.profile_image%>" alt="not found" height="25" width="20"><%=user.username+" "%><i class="arrow down"></i></p>
       <p id="userinfo" style="display : none;" onclick="myaccount()">My Account</p>
       <p id="signout" style="display : none;" onclick="signout()">Sign Out</p>
     </div>
@@ -41,15 +41,15 @@
 </div>
 <br>
 
-<!--<div class="comments">
+<!--  <div class="comments">
 <%if(loggedin){%>
   <div>
     <div style="display: inline-block;">
-      <img src=<%-user[0].profile_image%> alt="" height="50px" width="50px">
+      <img src=<%-//user[0].profile_image%> alt="" height="50px" width="50px">
     </div> 
     <div style="display: inline-block;">
       <div>
-        <%=user[0].username%>
+        <%=//user[0].username%>
       </div>
       <div>
         <input type="text" id="postingcom">
@@ -72,18 +72,18 @@
             <button onclick='replying(this)'>
               REPLY
             </button>
-            <%item.reply.forEach(async (it)=>{%>
+            <%//item.reply.forEach(async (it)=>{%>
               <div>
-                <%=it.replybody%>
+                <%=//it.replybody%>
               </div>
-            <%});%>
+            <%//});%>
           </div>
         </div>
       </div>
     <%});%>
     <%}%>
 </div>
-</div>-->
+</div>  -->
 </div>
 <div class="rightmain">
     <h5 class="topairing">Top Airing Anime</h5>
