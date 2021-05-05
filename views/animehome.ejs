@@ -1,16 +1,16 @@
 <%- include("partials/header"); -%>
 <%var loggedin=false;%>
-<%if(user.length==1){loggedin = true;}%>
+<%if(typeof user.email!="undefined"){loggedin = true;}%>
 <div id="headerlogin">
   <%if(loggedin!=true){%>
-    <a href="/account" id="login">Login</a>
-    <a href="/accounts" id="signup">Sign Up</a>
+    <a href="/login" id="login">Login</a>
+    <a href="/signup" id="signup">Sign Up</a>
   <%}%>
   <%if(loggedin==true){%>
     <div style="display:grid;grid-template-columns:1fr;" class="headeruser">
-      <p id="signup" onclick="userbutton()"><img src="<%=user[0].profile_image%>" alt="not found" height="25" width="20"><%=user[0].username+" "%><i class="arrow down"></i></p>
-      <p id="userinfo" style="display : none;" onclick="myaccount()">My Account</p>
-      <p id="signout" style="display : none;" onclick="signout()">Sign Out</p>
+      <div><p id="signup" onclick="userbutton()"><img src="<%=user.profile_image%>" alt="not found" height="25" width="20" loading="lazy"><%=user.username+" "%><i class="arrow down"></i></p></div>
+      <div><p id="userinfo" style="display : none;" onclick="myaccount()">My Account</p></div>
+      <div><p id="signout" style="display : none;" onclick="signout()">Sign Out</p></div>
     </div>
   <%}%>
 </div>
@@ -22,7 +22,7 @@
 <%for(var i=postdetails.length-1;i>=0;i--){%>
 <div class="newsitems" style="margin-bottom: 10px;">
   <div class="articleimg">
-    <img src="<%=postdetails[i].postimg%>" height="200px" width="200px">
+    <img src="<%=postdetails[i].postimg%>" height="200px" width="200px" loading="lazy">
   </div>
   <div class="titlepost">
     <div class="articletitle">
@@ -46,7 +46,7 @@
     <% for(let i=0;i<5;i++) {%>
         <div class="airing">
             <div class="number"><%=(i+1)%></div>
-            <div class="imageair"><img src="<%=airanime[i].image_url%>" alt=""></div>
+            <div class="imageair"><img src="<%=airanime[i].image_url%>" alt="" loading="lazy"></div>
             <div class="airname"><a href="/otaku/anime/<%=airanime[i].mal_id%>" style="text-decoration:none;"><%=airanime[i].title%></a></div>
         </div>
         <%}%>
@@ -56,7 +56,7 @@
         <%for(i=0;i<5;i++){%>
         <div class="airing">
             <div class="number"><%=(i+1)%></div>
-            <div class="imageair"><img src="<%=popanime[i].image_url%>" alt=""></div>
+            <div class="imageair"><img src="<%=popanime[i].image_url%>" alt="" loading="lazy"></div>
             <div class="airname"><a href="/otaku/anime/<%=popanime[i].mal_id%>" style="text-decoration:none;"><%=popanime[i].title%></a></div>
         </div>
       <%}%>

@@ -13,21 +13,21 @@
         <header>
             <div id="topheader">
                 <div><a href="/" id="logo">CineOtaku</a></div>
-<%var loggedin=false;%>
-<%if(userinfo.length==1){loggedin = true;}%>
-<div id="headerlogin">
-  <%if(loggedin!=true){%>
-    <a href="/account" id="login">Login</a>
-    <a href="/accounts" id="signup">Sign Up</a>
-  <%}%>
-  <%if(loggedin==true){%>
-    <div style="display:grid;grid-template-columns:1fr;" class="headeruser">
-      <p id="signup" onclick="userbutton()"><img src="<%=userinfo[0].profile_image%>" alt="not found" height="25" width="20"><%=userinfo[0].username+" "%><i class="arrow down"></i></p>
-      <p id="userinfo" style="display : none;" onclick="myaccount()">My Account</p>
-      <p id="signout" style="display : none;" onclick="signout()">Sign Out</p>
+    <%var loggedin=false;%>
+    <%if(typeof userinfo.email!="undefined"){loggedin = true;}%>
+    <div id="headerlogin">
+      <%if(loggedin!=true){%>
+        <a href="/login" id="login">Login</a>
+        <a href="/signup" id="signup">Sign Up</a>
+      <%}%>
+      <%if(loggedin==true){%>
+        <div style="display:grid;grid-template-columns:1fr;" class="headeruser">
+          <p id="signup" onclick="userbutton()"><img src="<%=userinfo.profile_image%>" alt="not found" height="25" width="20" loading="lazy"><%=userinfo.username+" "%><i class="arrow down"></i></p>
+          <p id="userinfo" style="display : none;" onclick="myaccount()">My Account</p>
+          <p id="signout" style="display : none;" onclick="signout()">Sign Out</p>
+        </div>
+      <%}%>
     </div>
-  <%}%>
-</div>
 </div>
 <nav>
   <div class="navleft">
@@ -59,17 +59,17 @@
     <div>
       <div class="fregion">
         <div class="profilepic">
-          <img src="<%=userinfo[0].profile_image.slice(1)%>" alt="" height="100px" width="100px">
+          <img src="<%=userinfo.profile_image.slice(1)%>" alt="" height="100px" width="100px" loading="lazy">
         </div>
         <div>
           <button onclick="redirect()" class="cpp">Change Profile photo</button>
         </div>
       </div>
       <div class="middle">
-          <p> <strong>Email Address : </strong> <%=userinfo[0].email%></p>
+          <p> <strong>Email Address : </strong> <%=userinfo.email%></p>
       </div>
       <div class="middle">
-        <p> <strong>Username : </strong> <%=userinfo[0].username%></p>
+        <p> <strong>Username : </strong> <%=userinfo.username%></p>
       </div>
       <div class="middle"> 
         <p> <strong>Password : </strong>  <button onclick="toaccpasschange()">Change Password</button></p>
@@ -106,9 +106,9 @@
                 </div>
                 <div>
                   <%if(item.image!=undefined){%>
-                    <img src="https://image.tmdb.org/t/p/original<%=item.image%>" height="150px" width="150px"><%}%>
+                    <img src="https://image.tmdb.org/t/p/original<%=item.image%>" height="150px" width="150px" loading="lazy"><%}%>
                     <%if(item.image==undefined){%>
-                      <img src="https://www.planetf1.com/content/themes/planet/img/no_image.jpg" height="150px" width="150px"><%}%>
+                      <img src="https://www.planetf1.com/content/themes/planet/img/no_image.jpg" height="150px" width="150px" loading="lazy"><%}%>
                 </div>
                 <div>
                    <a href="/binger/movie/<%=item.movieid%>"><%=item.name%></a>
@@ -137,9 +137,9 @@
             </div>
             <div>
               <%if(item.image!=undefined){%>
-                <img src="https://image.tmdb.org/t/p/original<%=item.image%>" height="150px" width="150px"><%}%>
+                <img src="https://image.tmdb.org/t/p/original<%=item.image%>" height="150px" width="150px" loading="lazy"><%}%>
                 <%if(item.image==undefined){%>
-                  <img src="https://www.planetf1.com/content/themes/planet/img/no_image.jpg" height="150px" width="150px"><%}%>
+                  <img src="https://www.planetf1.com/content/themes/planet/img/no_image.jpg" height="150px" width="150px" loading="lazy"><%}%>
             </div>
             <div>
                <a href="/binger/series/<%=item.seriesid%>"><%=item.name%></a>
@@ -169,9 +169,9 @@
             </div>
             <div>
               <%if(item.image!=undefined){%>
-                <img src="<%=item.image%>" height="150px" width="150px"><%}%>
+                <img src="<%=item.image%>" height="150px" width="150px" loading="lazy"><%}%>
                 <%if(item.image==undefined){%>
-                  <img src="https://www.planetf1.com/content/themes/planet/img/no_image.jpg" height="150px" width="150px"><%}%>
+                  <img src="https://www.planetf1.com/content/themes/planet/img/no_image.jpg" height="150px" width="150px" loading="lazy"><%}%>
             </div>
             <div>
                <a href="/otaku/anime/<%=item.animeid%>"><%=item.name%></a>
@@ -201,9 +201,9 @@
             </div>
             <div>
               <%if(item.image!=undefined){%>
-                <img src="<%=item.image%>" height="150px" width="150px"><%}%>
+                <img src="<%=item.image%>" height="150px" width="150px" loading="lazy"><%}%>
                 <%if(item.image==undefined){%>
-                  <img src="https://www.planetf1.com/content/themes/planet/img/no_image.jpg" height="150px" width="150px"><%}%>
+                  <img src="https://www.planetf1.com/content/themes/planet/img/no_image.jpg" height="150px" width="150px" loading="lazy"><%}%>
             </div>
             <div>
                <a href="/otaku/manga/<%=item.mangaid%>"><%=item.name%></a>

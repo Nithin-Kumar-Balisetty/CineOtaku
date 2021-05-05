@@ -16,22 +16,22 @@
         Login
         <span class="underline"></span>
       </button>
-      <form name="loginform" class="form form-login" method="post" action="/account">
+      <form name="loginform" class="form form-login" method="post" action="/login">
         <fieldset>
           <legend>Please, enter your email and password for login.</legend>
           <div class="input-block">
             <label for="login-email">E-mail</label>
-            <input id="login-email" name="lemail" type="email" required>
+            <input id="login-email" name="email" type="email" required>
           </div>
           <div class="input-block">
             <label for="login-password">Password</label>
-            <input id="login-password" name="lpass" type="password" required>
+            <input id="login-password" name="password" type="password" required>
           </div>
           <input type="checkbox" onclick="checking('login-password')"><p style="display : inline; font-size : 14px;">Show Password</p>
         </fieldset>
-        <%if(Credentialwrong==true){%>
-          <p style="color:red;">*Credentials wrong</p>
-          <%}%>
+        <%if(messages.error){%>
+          <p style="color:red;"><%=messages.error%></p>
+        <%}%>
         <button type="submit" class="btn-login">Login</button>
       </form>
     </div>
@@ -40,16 +40,16 @@
         Sign Up
         <span class="underline"></span>
       </button>
-      <form name="signinform" class="form form-signup" method="post" action="/account" onsubmit="return validateForm()">
+      <form name="signinform" class="form form-signup" method="post" action="/login" onsubmit="return validateForm()">
         <fieldset>
           <legend>Please, enter your email, password and password confirmation for sign up.</legend>
           <div class="input-block">
             <label for="signup-email">E-mail</label>
-            <input id="signup-email" name="email" type="email" required>
+            <input id="signup-email" name="semail" type="email" required>
           </div>
           <div class="input-block">
             <label for="signup-username">Username</label>
-            <input id="signup-username" name="username" type="username" required minlength ="6">
+            <input id="signup-username" name="susername" type="username" required minlength ="6">
           </div>
           <div class="input-block">
             <label for="signup-password">Password</label>
@@ -63,6 +63,8 @@
           <input type="checkbox" onclick="checking('signup-password-confirm')"><p style="display : inline; font-size : 14px;">Show Password</p>
 
         </fieldset>
+        <%var samp1=alreadyaccount%>
+        <%var sm=alreadyaccountusername%>
         <%if(alreadyaccount==true){%>
           <p style="color:red;" id="alexist">*Account with this email already exists</p>
         <%}%>

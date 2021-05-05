@@ -9,10 +9,10 @@
 </head>
 <body>
     <% var us=user;%>
-    <% console.log(user[0].profile_image);%>
+    <% console.log(user.profile_image);%>
     <div class="centre">
         <div class="profile_image">
-            <img src="<%=user[0].profile_image.slice(1)%>" alt="" height="200px" width="200px">
+            <img src="<%=user.profile_image.slice(1)%>" alt="" height="200px" width="200px">
         </div>
         <div class="buttonchange">
             <button onclick="trigger()">Change the profile photo</button>

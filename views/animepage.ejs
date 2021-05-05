@@ -1,14 +1,15 @@
 <%- include("partials/header"); -%>
 <%var loggedin=false;%>
-<%if(user.length==1){loggedin = true;}%>
+<%if(typeof user.email!="undefined"){loggedin = true;}%>
+<%console.log(loggedin)%>
 <div id="headerlogin">
   <%if(loggedin!=true){%>
-    <a href="/account" id="login">Login</a>
-    <a href="/accounts" id="signup">Sign Up</a>
+    <a href="/login" id="login">Login</a>
+    <a href="/signup" id="signup">Sign Up</a>
   <%}%>
   <%if(loggedin==true){%>
     <div style="display:grid;grid-template-columns:1fr;" class="headeruser">
-      <p id="signup" onclick="userbutton()"><img src="<%=user[0].profile_image%>" alt="not found" height="25" width="20"><%=user[0].username+" "%><i class="arrow down"></i></p>
+      <p id="signup" onclick="userbutton()"><img src="<%=user.profile_image%>" alt="not found" height="25" width="20"><%=user.username+" "%><i class="arrow down"></i></p>
       <p id="userinfo" style="display : none;" onclick="myaccount()">My Account</p>
       <p id="signout" style="display : none;" onclick="signout()">Sign Out</p>
     </div>
@@ -129,6 +130,7 @@
         <h3 style="font-size : 18px;border-bottom: 1.5px black solid;"><strong>Characters and Voice actors</strong></h3>
         <div class="charvoice" style="display: grid; grid-template-columns: 1fr;">
             <%let count=0%>
+          <%if(typeof jsonchar.characters !="undefined"){%>
             <%jsonchar.characters.forEach(async (item,i)=>{%>
               <%if(count<=10&&item.role=="Main"){%>
                 <%count=count+1%>
@@ -157,6 +159,7 @@
                 </div>
                 <%}%>
             <%});%>
+          <%}%>
         </div>
       </div>
       <div style="margin-left: 5px;">
