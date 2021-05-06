@@ -8,4 +8,4 @@ newcom.comments[1].reply.push({email : "bhanu@gmail.com",comment : "yes"});
 otakuarticle.find({postid : 1},async(err,docs)=>{
   if(err) console.log("error found");
   else  console.log(docs[0]);
-})
+}
