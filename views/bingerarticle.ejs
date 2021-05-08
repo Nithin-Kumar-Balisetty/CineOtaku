@@ -7,10 +7,10 @@
     <a href="/signup" id="signup">Sign Up</a>
   <%}%>
   <%if(loggedin==true){%>
-    <div style="display:grid;grid-template-columns:1fr;" class="headeruser">
-      <p id="signup" onclick="userbutton()"><img src="<%=user.profile_image%>" alt="not found" height="25" width="20"><%=user.username+" "%><i class="arrow down"></i></p>
-      <p id="userinfo" style="display : none;" onclick="myaccount()">My Account</p>
-      <p id="signout" style="display : none;" onclick="signout()">Sign Out</p>
+    <div id="headeruser">
+      <div><p id="signup" onclick="userbutton()"><img src="<%=user.profile_image%>" alt="not found" height="25" width="20" loading="lazy"><%=user.username+" "%><i class="arrow down"></i></p></div>
+      <div><p id="userinfo" onclick="myaccount()">My Account</p></div>
+      <div><p id="signout" onclick="signout()">Sign Out</p></div>
     </div>
   <%}%>
 </div>
@@ -39,6 +39,96 @@
         </div>
       <%}%>
     </div>
+    <br>
+<h5 class="firsttag">Comments</h5>
+<div class="comments">
+<%if(loggedin){%>
+  <div class="post" style="margin-left: 0;">
+    <div>
+      <img src=<%-user.profile_image%> alt="" height="50px" width="50px">
+    </div> 
+    <div style="margin-left: 10px;">
+      <div>
+        <%=user.username%>
+      </div>
+      <div>
+        <input type="text" id="postingcom">
+        <button id="post" onclick="posting()">Comment</button>
+      </div>
+    </div>
+  </div>  
+  <%}%>
+
+<%function dategen(dat){%>
+<%var date1 = new Date(dat);%>
+<%var date2 = new Date();%>
+<%var Difference_In_Time = date2.getTime() - date1.getTime();%>
+<%var Diff = Difference_In_Time / (1000 * 3600 * 24);%>
+<%if(Math.floor(Diff)==0){return (new Date(dat)).toLocaleTimeString('en-IN');}%>
+<%if(Math.floor(Diff)!=0){%>
+    <%if(Math.floor(Diff)==1){return "a day ago";}%>
+    <%if(Math.floor(Diff)!=1){return Math.floor(Diff)+" days ago";}}%>
+<%}%>
+
+<div class="comment">
+  <%if(postdetails.comments.length>0){%>
+    <%for(var i=postdetails.comments.length-1;i>=0;i--){%>
+      <div class='post'>
+        <input type="hidden" value="<%=postdetails.comments[i].commentid%>">
+        <div>
+          <img src="<%=postdetails.comments[i].profile_pic%>" alt="" height="50px" width="50px">
+        </div>
+        <div class="left-side">
+          <div class="timeuser">
+            <p><%=postdetails.comments[i].username%></p>
+            <p><%=dategen(postdetails.comments[i].date)%></p>
+          </div>
+          <div><%=postdetails.comments[i].commentbody%></div>
+          <div class="rbutton">
+            <%if(!loggedin){%>
+              <button onclick="location.href='/login'">
+                Reply
+              </button>
+            <%}%>
+            <%if(loggedin){%>
+            <button onclick='expanding(this)'>
+              Reply
+            </button>
+            <%}%>
+          </div>
+        </div>
+      </div>
+      <div class="reply areply">
+        <div>
+          <img src="<%=user.profile_image%>" alt="" height="50px" width="50px">
+        </div>
+        <div>
+          <div><%=user.username%></div>
+          <input type='text' class='postingrep'>
+          <button onclick='replying(this)'>
+            Reply
+          </button>
+        </div>
+      </div>
+      <div style="display: none;">
+      <%for(var j=postdetails.comments[i].reply.length-1;j>=0;j--){%>
+        <div class="alreply">
+          <div>
+            <img src="<%=postdetails.comments[i].reply[j].profile_pic%>" alt="" height="50px" width="50px">
+          </div>
+          <div>
+            <div class="timeuser"><p><%=postdetails.comments[i].reply[j].username%></p>
+                <p><%=dategen(postdetails.comments[i].reply[j].date)%></p>
+            </div>
+            <div><%=postdetails.comments[i].reply[j].replybody%></div>
+          </div>
+        </div>
+      <%}%> 
+    </div>  
+    <%}%>
+    <%}%>
+</div>
+</div> 
 </div>
 <div class="rightmain">
     <h5 class="topairing">Trending Movies Worldwide</h5>
@@ -65,12 +155,11 @@
     </div>
 </div>
 </div>
-
-
 </main>
 </div>
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
-<script src="scripts/animehome.js"></script>
+<script src="/scripts/animehome.js"></script>
+<script src="/scripts/bingerscript.js"></script>
 </html>

@@ -7,10 +7,10 @@
     <a href="/accounts" id="signup">Sign Up</a>
   <%}%>
   <%if(loggedin==true){%>
-    <div style="display:grid;grid-template-columns:1fr;" class="headeruser">
-      <p id="signup" onclick="userbutton()"><img src="<%=user[0].profile_image%>" alt="not found" height="25" width="20"><%=user[0].username+" "%><i class="arrow down"></i></p>
-      <p id="userinfo" style="display : none;" onclick="myaccount()">My Account</p>
-      <p id="signout" style="display : none;" onclick="signout()">Sign Out</p>
+    <div id="headeruser">
+      <div><p id="signup" onclick="userbutton()"><img src="<%=user.profile_image%>" alt="not found" height="25" width="20" loading="lazy"><%=user.username+" "%><i class="arrow down"></i></p></div>
+      <div><p id="userinfo" onclick="myaccount()">My Account</p></div>
+      <div><p id="signout" onclick="signout()">Sign Out</p></div>
     </div>
   <%}%>
 </div>

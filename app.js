@@ -36,7 +36,6 @@ const app=express();
 
 const ejsLint= require('ejs-lint');
 const fs = require('fs');
-let newuser=[];
 var multer  = require('multer');
 const otakuarticle=mongo.model("otakuarticle",articleschema);
 const bingerarticle =mongo.model("bingerarticle",articleschema);
@@ -92,6 +91,7 @@ passport.use(new localStrategy({
 
 const { RSA_NO_PADDING } = require("constants");
 const { isUndefined } = require("lodash");
+const { discriminator } = require("./dbmodels/User");
 app.get("/otaku",async (req,res) => {
     console.log(req.isAuthenticated());
     let topanimeresponse = await fetch("https://api.jikan.moe/v3/top/anime/1/bypopularity");
@@ -194,6 +194,36 @@ app.get("/binger/news/:newsid",async (req,res)=>
     }
   });
 });
+app.post("/binger/news/:newsid",async (req,res)=>{
+  console.log(req.body);
+  
+  if(typeof req.body.replybody=="undefined")
+ {
+   User.findOne({email : req.user.email},function(error,userr){
+       if(error) console.log("comment posting err");
+       else{
+         bingerarticle.updateOne({postid : req.params.newsid},{$push : {comments : {commentid : req.body.commentid,date : (new Date()),profile_pic : userr.profile_image,username : req.user.username,commentbody : req.body.commentbody,reply : []}}},function(err,docs)
+         {
+             if(err)
+                console.log("comment posting error");
+         });
+       }
+   });
+ }
+ if(typeof req.body.commentbody=="undefined"){
+   User.findOne({email : req.user.email},function(err,user){
+     if(err) console.log("reply posting error");
+     else{
+       bingerarticle.updateOne({postid : req.params.newsid,"comments.commentid" : req.body.commentid},{$push : {"comments.$.reply" : {replyid : req.body.replyid,date : (new Date()),profile_pic : user.profile_image,username : user.username,replybody : req.body.replybody}}},function(err,docs)
+       {
+         if(err){
+           console.log("comment posting error");
+         }
+       }); 
+     }
+   });
+  }   
+});
 app.get("/binger/search",async (req,res)=>
 {
   let myURL = new URL("https:/"+req.url);
@@ -276,14 +306,14 @@ app.get("/login",authenicatedto,async (req,res)=>{
 });
 function authenicatedto(req, res, next) {
   if (req.isAuthenticated()) {
-    return res.redirect("/")
+    return res.redirect("/myaccount");
   }
   next()      
 }
 app.post("/login",async(req,res,next)=>{
   if(req.body.semail==null){
     passport.authenticate("local",{
-      successRedirect : "/otaku",
+      successRedirect : "/myaccount",
       failureRedirect : "/login",
       failureFlash : true
     })(req,res,next);
@@ -518,35 +548,32 @@ app.post("/test",async (req,res)=>{
 console.log(arr);
 app.post("/otaku/news/:newsid",async (req,res)=>{
    console.log(req.body);
-   console.log(req.body.commentbody);
+   
    if(typeof req.body.replybody=="undefined")
   {
-    otakuarticle.updateOne({postid : req.params.newsid},{$push : {comments : {commentid : req.body.commentid,date : (new Date()),profile_pic : req.body.profile_pic,username : req.body.username,commentbody : req.body.commentbody,reply : []}}},function(err,docs)
-    {
-        if(err)
-           console.log("comment posting error");
+    User.findOne({email : req.user.email},function(error,userr){
+        if(error) console.log("comment posting err");
+        else{
+          otakuarticle.updateOne({postid : req.params.newsid},{$push : {comments : {commentid : req.body.commentid,date : (new Date()),profile_pic : userr.profile_image,username : req.user.username,commentbody : req.body.commentbody,reply : []}}},function(err,docs)
+          {
+              if(err)
+                 console.log("comment posting error");
+          });
+        }
     });
   }
   if(typeof req.body.commentbody=="undefined"){
-    let l=[];
-    otakuarticle.findOne({postid : req.params.newsid},function(err,docs){
-          if(err)
-            console.log("reply posting");
-          else
-          {
-            if(docs)
-                l.push(docs.comments[req.body.commentid-1].reply.length);
+    User.findOne({email : req.user.email},function(err,user){
+      if(err) console.log("reply posting error");
+      else{
+        otakuarticle.updateOne({postid : req.params.newsid,"comments.commentid" : req.body.commentid},{$push : {"comments.$.reply" : {replyid : req.body.replyid,date : (new Date()),profile_pic : user.profile_image,username : user.username,replybody : req.body.replybody}}},function(err,docs)
+        {
+          if(err){
+            console.log("comment posting error");
           }
+        }); 
+      }
     });
-    var len=l[0]+1;
-    l.pop();
-    console.log(len);
-    otakuarticle.updateOne({postid : req.params.newsid,"comments.commentid" : req.body.commentid},{$push : {"comments.$.reply" : {replyid : len,date : (new Date()),profile_pic : req.body.profile_pic,username : req.body.username,replybody : req.body.replybody}}},function(err,docs)
-    {
-        if(err){
-          console.log("comment posting error");
-        }
-    }); 
    }   
 });
 //  comments : [{commentid : Number ,date: String ,username : String,commentbody : String ,reply : [{replyid : Number,date : String, username : String,replybody : String}]}]
@@ -825,3 +852,56 @@ app.post("/accpasschange", function(req,res){
     }
   })
 });
+app.get("/otaku/com/:postid",async (req,res)=>{
+    otakuarticle.findOne({postid : req.params.postid},function(err,doc){
+        if(err) res.status(404).send("Cannot connect");
+        else{
+          User.findOne({email : req.user.email},function(error,user){
+            if(error) res.status(404).send("Cannot connect");
+            else res.send({comlen : doc.comments.length,profile_pic : user.profile_image,username:user.username});
+          });
+        } 
+    });
+});
+app.get("/otaku/com/:postid/:commid",async (req,res)=>{
+  otakuarticle.findOne({postid : req.params.postid},function(err,docs){
+    if(err) console.log("reply posting error");
+    else
+    {
+      User.findOne({email : req.user.email},function(error,user){
+        if(error) console.log("reply posting error");
+        else{
+          console.log(docs.comments[req.params.commid-1]);
+          res.send({replen : docs.comments[req.params.commid-1].reply.length,profile_pic : user.profile_image,username:user.username});
+        }
+      })
+    }
+  })
+});
+app.get("/binger/com/:postid",async (req,res)=>{
+  bingerarticle.findOne({postid : req.params.postid},function(err,doc){
+      if(err) res.status(404).send("Cannot connect");
+      else{
+        User.findOne({email : req.user.email},function(error,user){
+          if(error) res.status(404).send("Cannot connect");
+          else res.send({comlen : doc.comments.length,profile_pic : user.profile_image,username:user.username});
+        });
+      } 
+  });
+});
+app.get("/binger/com/:postid/:commid",async (req,res)=>{
+bingerarticle.findOne({postid : req.params.postid},function(err,docs){
+  if(err) console.log("reply posting error");
+  else
+  {
+    User.findOne({email : req.user.email},function(error,user){
+      if(error) console.log("reply posting error");
+      else{
+        console.log(docs.comments[req.params.commid-1]);
+        res.send({replen : docs.comments[req.params.commid-1].reply.length,profile_pic : user.profile_image,username:user.username});
+      }
+    })
+  }
+})
+});
+

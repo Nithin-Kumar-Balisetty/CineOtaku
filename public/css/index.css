@@ -33,9 +33,16 @@
     padding: 4px 0px;
     color: #1d439b;
 }
-
-.headeruser p{
-  margin-left: auto;
+#headeruser{
+  display:grid;
+  grid-template-columns:1fr;
+  float: right;
+  z-index: 0;
+}
+#headeruser>div{
+  height: max-content;
+}
+#headeruser>div>p{
   cursor: pointer;
 }
 .arrow {
@@ -50,8 +57,7 @@
 }
 #signout,#userinfo{
   text-decoration : none;
-  z-index :1;
-  background-color: whitesmoke;
+  cursor: pointer;
   display: none;
 }
 #login:hover , #signup:hover{
@@ -61,9 +67,6 @@
 nav{
     height: 34px;
     background-color: #2e51a2;
-}
-.navleft{
-  
 }
 .navleft ul li{
     display: block;
@@ -248,11 +251,6 @@ nav{
   margin-top: 10px;
   margin-left: 50px
 }
-.reply
-{
-  display: none;
-  margin-left: 30px;
-}
 #button1{
   background-color: lightblue;
 }
@@ -413,4 +411,48 @@ nav{
 .articlecontent a{
   text-decoration: none;
   color: #000;
+}
+.post{
+  margin-top: 10px;
+  margin-left: 50px;
+  display: grid;
+  grid-template-columns: 50px auto;
+}
+.post>div:first-child{
+  margin-top: 5px;
+}
+.left-side{
+  margin-left: 10px;
+}
+.left-side>div:last-child{
+  margin-top: 10px;
+}
+
+.reply{
+  margin-top: 10px;
+  margin-left: 100px;
+  display: grid;
+  grid-template-columns: 50px auto;
+}
+.reply>div:nth-child(2){
+  margin-left: 10px;
+}
+.areply{
+  display: none;
+}
+.alreply{
+  margin-top: 10px;
+  margin-left: 100px;
+  display: grid;
+  grid-template-columns: 50px auto;
+}
+.alreply>div:nth-child(2){
+  margin-left: 10px;
+}
+.timeuser>p{
+  display: inline-block;
+  margin-bottom: 2.5px;
+}
+.timeuser>p:first-child{
+  margin-right: 20px;
 }
