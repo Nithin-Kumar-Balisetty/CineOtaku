@@ -15,22 +15,21 @@ function posting(){
                     commentid : parseInt(data.comlen)+1,
                     commentbody : $("#postingcom").val()
                 },
-                success : function(dat){
-                    console.log("teset");
-                    
+                success : function(da){
                 },
                 error : function(err)
                 {
-                  console.log(err);
+                  window.location.reload();
                 }
             })
             var inhtml="<div class='post'><input type='hidden' value="+(parseInt(data.comlen)+1)+"><div><img src='"+data.profile_pic+"' alt='' height='50px' width='50px'></div><div class='left-side'><div class='timeuser'><p>"+data.username+"</p><p>"+(new Date()).toLocaleTimeString('en-IN')+"</p></div><div>"+$("#postingcom").val()+"</div><div class='rbutton'><button onclick='expanding(this)'>Reply</button></div></div></div><div class='reply areply'><div><img src='"+data.profile_pic+"' alt='' height='50px' width='50px'></div><div><div>"+data.username+"</div><input type='text' class='postingrep'><button onclick='replying(this)'>Reply</button></div></div><div style='none'></div>";
             $(".comment").prepend(inhtml);
+            $("#postingcom").val("");
+
           },error : function(err){
-              console.log(err);
+              window.location.reload();
           }
         });
-        
     }
   }
 function replying(element){
@@ -54,16 +53,19 @@ if(element.previousElementSibling.value!="")
           commentid : ele,
           replybody : element.parentNode.childNodes[1].value
         },
+        success : function(da){
+        },
         error : function(er){
-          alert("Error in posting reply.Sorry for the inconvenience");
+          window.location.reload();
         }
       })
           var inhtml="<div class='alreply'><div><img src='"+data.profile_pic+"' alt='' height='50px' width='50px'></div><div><div class='timeuser'><p>"+data.username+"</p><p>"+(new Date()).toLocaleTimeString('en-IN')+"</p></div><div>"+element.previousElementSibling.value+"</div></div></div>";
           console.log(element.parentNode.parentNode);
           $(element.parentNode.parentNode.nextElementSibling).prepend(inhtml);
+          element.previousElementSibling.value="";
     },
     error : function(err){
-      console.log(err);
+      window.location.reload();
     }
   });
  /* $.ajax({

@@ -390,8 +390,8 @@ app.post("/",async (req,res)=>{
 
 });
 app.get("/otaku/compose",async(req,res)=>{
-  if(req.user.length==1){
-    if(req.user[0].email==process.env.MASTER)
+  if(req.isAuthenticated()){
+    if(req.user.email==process.env.MASTER)
       res.render("compose");
     else {
       res.send("Cannot GET /otaku/compose");
@@ -402,8 +402,8 @@ app.get("/otaku/compose",async(req,res)=>{
   }
 });
 app.get("/binger/compose",async(req,res)=>{
-  if(req.user.length==1){
-    if(req.user[0].email==process.env.MASTER)
+  if(req.isAuthenticated()){
+    if(req.user.email==process.env.MASTER)
       res.render("composem");
     else {
       res.send("Cannot GET /binger/compose");
