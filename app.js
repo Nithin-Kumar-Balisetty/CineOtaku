@@ -1,6 +1,4 @@
 //jshint esversion:6
-//http://www.omdbapi.com/?i=tt3896198&apikey=f8d8a583
-//main api key 6305d43a0ac191e9665db77ff87bbff1
 const express = require("express");
 const flash=require("express-flash");
 const bodyParser = require("body-parser");
