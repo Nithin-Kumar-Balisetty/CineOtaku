@@ -12,6 +12,7 @@ if(document.getElementsByTagName('section')[0].id=="samp1")
 {
 	document.getElementById("signup").click();
 }
+
 function validateForm() {
   var x = document.forms["signinform"]["pass"].value;
   var y=document.forms["signinform"]["confirmpass"].value;
@@ -20,6 +21,7 @@ function validateForm() {
     return false;
   }
 }
+
 if(document.getElementById("alexist")!=null){
 		document.getElementById("signup").click();
 }

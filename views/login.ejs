@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <title>Login</title>
     <link rel="stylesheet" href="css/login.css">
+    <script src="https://www.recaptcha.net/recaptcha/api.js" async defer></script>  
   </head>
   <body>
     <%let id="samp";%>
@@ -28,9 +29,15 @@
             <input id="login-password" name="password" type="password" required>
           </div>
           <input type="checkbox" onclick="checking('login-password')"><p style="display : inline; font-size : 14px;">Show Password</p>
+          <%if(captcha) { %> <div class="g-recaptcha" data-sitekey="6Le0wSkdAAAAALBc3Don8eFB0saguQBd3wm4T8Zz"></div> <%}%>
         </fieldset>
         <%if(messages.error){%>
+          <br>
           <p style="color:red;"><%=messages.error%></p>
+        <%}%>
+        <%if(captcha_notfill) { %>
+          <br>
+          <p style="color:red;">Please fill the Re-Captcha</p> 
         <%}%>
         <button type="submit" class="btn-login">Login</button>
       </form>

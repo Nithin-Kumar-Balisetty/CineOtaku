@@ -87,9 +87,9 @@ passport.use(new localStrategy({
 	});
 }));
 
-const { RSA_NO_PADDING } = require("constants");
+/* const { RSA_NO_PADDING } = require("constants");
 const { isUndefined } = require("lodash");
-const { discriminator } = require("./dbmodels/User");
+const { discriminator } = require("./dbmodels/User"); */
 app.get("/otaku",async (req,res) => {
     console.log(req.isAuthenticated());
     let topanimeresponse = await fetch("https://api.jikan.moe/v3/top/anime/1/bypopularity");
@@ -135,12 +135,14 @@ app.get("/otaku/search",async (req,res) =>
 app.get("/otaku/anime/:animeid",async (req,res)=>{
     const jsonanime = await fetch("https://api.jikan.moe/v3/anime/"+req.params.animeid);
     let jsonachar=await fetch("https://api.jikan.moe/v3/anime/"+req.params.animeid+"/characters_staff");
+    if(jsonanime.status===undefined || jsonachar.status===undefined) res.send("Error in loading apge");
+    if(!(jsonanime.ok && jsonachar.ok)) res.send("Eror in loading page");
     let jsonchar = await jsonachar.json();
     const jsonanimedata=await jsonanime.json();
     if(req.isAuthenticated())
       res.render("animepage",{animedataobject : jsonanimedata,refer : "anime",user : req.user,jsonchar : jsonchar});
     else
-    res.render("animepage",{animedataobject : jsonanimedata,refer : "anime",user : {},jsonchar : jsonchar}); 
+      res.render("animepage",{animedataobject : jsonanimedata,refer : "anime",user : {},jsonchar : jsonchar}); 
 });
 app.get("/otaku/manga/:mangaid",async (req,res)=>{
     const jsonmanga = await fetch("https://api.jikan.moe/v3/manga/"+req.params.mangaid);
@@ -289,18 +291,22 @@ app.get("/binger/series/:seriesid",async(req,res)=>
         else  res.render("seriespage",{moviedataobject : jsonseriesdata,type : "series",Language : ISO6391.getName(jsonseriesdata.original_language),scredits : scredits,user : {}});
     });
 });
-app.listen(process.env.PORT||4500,function(req,res)
+app.listen(process.env.PORT||80,"192.168.2.3",function(req,res)
 {
-  console.log("Running server on port 4500");
+  console.log("Running server on port HTTP : Port 80");
+  console.log("URL : 192.168.2.3:80 or Default 192.168.2.3");
 });
-/*app.get("/account",async (req,res)=>{
-  if(!req.isAuthenticated())
-      res.status(200).render("login",{alreadyaccount : false ,Credentialwrong : false , alreadyaccountusername : false ,signin : false});
-  else  res.redirect("/");
-});*/
+
 
 app.get("/login",authenicatedto,async (req,res)=>{
-  res.status(200).render("login",{alreadyaccount : false , alreadyaccountusername : false ,signin : false});
+  let bool;
+  if(req.session.recaptcha===undefined){
+    req.session.recaptcha=false;
+    bool =false;
+  }
+  else bool=req.session.recaptcha;
+  console.log(req.session.recaptcha);
+  res.status(200).render("login",{alreadyaccount : false , alreadyaccountusername : false ,signin : false,captcha : bool, captcha_notfill : req.session.recaptcha_notfill});
 });
 function authenicatedto(req, res, next) {
   if (req.isAuthenticated()) {
@@ -308,13 +314,55 @@ function authenicatedto(req, res, next) {
   }
   next()      
 }
+
+const { stringify } = require('querystring');
+
 app.post("/login",async(req,res,next)=>{
   if(req.body.semail==null){
-    passport.authenticate("local",{
-      successRedirect : "/myaccount",
-      failureRedirect : "/login",
-      failureFlash : true
-    })(req,res,next);
+   // console.log(req.body);
+    if(req.isAuthenticated()){
+       res.redirect("/myaccount");
+    }
+    else{
+      if(req.session.timesTried && !req.isAuthenticated()) req.session.timesTried+=1;
+      else req.session.timesTried=1;
+      
+      if(req.session.timesTried>=5){
+        req.session.recaptcha=true;
+        //console.log(req.body);
+        const secretKey = '6Le0wSkdAAAAANCpIfvz0cIEBC44zYmrdDQk0fNW';
+       // console.log('logs : '+req.body["g-recaptcha-response"]);
+        // Verify URL
+        const query = stringify({
+          secret: secretKey,
+          response: req.body["g-recaptcha-response"],
+        });
+        const verifyURL = `https://google.com/recaptcha/api/siteverify?${query}`;
+        const body = await fetch(verifyURL).then(res => res.json());
+
+        if (body.success !== undefined && !body.success){
+          req.session.recaptcha_notfill = true;
+          res.redirect("/login");
+          return ;
+        }
+        else{
+          req.session.recaptcha_notfill = false;
+          passport.authenticate("local",{
+            successRedirect : "/myaccount",
+            failureRedirect : "/login",
+            failureFlash : true
+          })(req,res,next);
+        }
+      //  console.log('Checking '+req.session.recaptcha+" is "+req.session.timesTried);
+      }
+      else{
+        passport.authenticate("local",{
+          successRedirect : "/myaccount",
+          failureRedirect : "/login",
+          failureFlash : true
+        })(req,res,next);
+      }
+    }
   }
   else{
     let email=req.body.semail;
@@ -342,7 +390,7 @@ app.post("/login",async(req,res,next)=>{
     {
       alreadyaccout.pop();
       alreadyaccout1.pop();
-      res.render("login",{alreadyaccount : boo,alreadyaccountusername : boo1,signin : true});
+      res.render("login",{alreadyaccount : boo,alreadyaccountusername : boo1,signin : true,captcha : false,captcha_notfill : null});
     }
     else
     {
@@ -359,9 +407,11 @@ app.post("/login",async(req,res,next)=>{
   }
 });
 app.get("/signup",async(req,res)=>{
-  res.status(200).render("login",{alreadyaccount : false , alreadyaccountusername : false ,signin : true});
+  res.status(200).render("login",{alreadyaccount : false , alreadyaccountusername : false ,signin : true,captcha : false,captcha_notfill : null});
 });
 app.get("/signout",async (req,res)=>{
+  if(req.session.timesTried) req.session.timesTried=0;
+  req.session.recaptcha=false;
   req.logOut();
   res.redirect("/");
 });
