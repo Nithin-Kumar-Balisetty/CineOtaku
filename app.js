@@ -291,10 +291,9 @@ app.get("/binger/series/:seriesid",async(req,res)=>
         else  res.render("seriespage",{moviedataobject : jsonseriesdata,type : "series",Language : ISO6391.getName(jsonseriesdata.original_language),scredits : scredits,user : {}});
     });
 });
-app.listen(process.env.PORT||80,"192.168.2.3",function(req,res)
+app.listen(process.env.PORT||3000,function(req,res)
 {
-  console.log("Running server on port HTTP : Port 80");
-  console.log("URL : 192.168.2.3:80 or Default 192.168.2.3");
+  console.log("Running server");
 });
 
 
