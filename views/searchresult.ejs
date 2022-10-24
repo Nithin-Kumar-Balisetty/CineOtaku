@@ -23,7 +23,7 @@
 <% for(let i=0;i<10;i++){ %>
 <div class="searchitems">
     <div class="animesearchimg">
-        <img src="<%=animeobjects[i].image_url%>">
+        <img src="<%=animeobjects[i].images.jpg.image_url%>">
     </div>
     <div class="animesearchdata">
         <div class="animetitle">
@@ -52,7 +52,7 @@
 <% for(let i=0;i<10;i++){ %>
 <div class="searchitems">
     <div class="animesearchimg">
-        <img src="<%=mangaobjects[i].image_url%>">
+        <img src="<%=mangaobjects[i].images.jpg.image_url%>">
     </div>
     <div class="animesearchdata">
         <div class="animetitle">
@@ -73,24 +73,24 @@
 </div>
 <div class="rightmain">
     <h5 class="topairing">Top Airing Anime</h5>
-    <div class="airinganime">
+    <div class="airinganime"  style="background-color: rgb(0,0,0,0.3) ; ">
       <% let airanime = airanimeobject %>
       <% for(let i=0;i<5;i++) {%>
-        <div class="airing">
-            <div class="number"><%=(i+1)%></div>
-            <div class="imageair"><img src="<%=airanime[i].image_url%>" alt=""></div>
-            <div class="airname"><a href="/otaku/anime/<%=airanime[i].mal_id%>"><%=airanime[i].title%></a></div>
+        <div>
+          <div class="airing">
+            <div class="imageair"><img style="margin: 5px 3px 0px 3px; height:260px; width: 260px" src="<%=airanime[i].images.jpg.image_url%>" alt=""></div>
+          </div>
         </div>
         <% }%>
         <h5 class="topairing">Most Popular Anime</h5>
         <div class="airinganime">
         <%let popanime=topanimeobject%>
         <%for(i=0;i<5;i++){%>
-        <div class="airing">
-            <div class="number"><%=(i+1)%></div>
-            <div class="imageair"><img src="<%=popanime[i].image_url%>" alt=""></div>
-            <div class="airname"><a href="/otaku/anime/<%=popanime[i].mal_id%>"><%=popanime[i].title%></a></div>
-        </div>
+          <div class="" style="background-color: rgb(0,0,0,0.3) ; ">
+            <div class="airing">
+              <div class="imageair"><img style="margin: 5px 3px 0px 3px; height:260px; width: 260px" src="<%=popanime[i].images.jpg.image_url%>" alt=""></div>
+          </div>
+          </div>
         <%}%>
       </div>
     </div>

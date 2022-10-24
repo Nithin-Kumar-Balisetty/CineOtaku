@@ -27,9 +27,10 @@ const userratingschema=new Schema({
   email : String,
   animerating : [{animeid : Number,image : String,name : String,rating : Number,release : String}],
   mangarating : [{mangaid : Number,image : String,name : String,rating : Number,release : String}],
-  movierating : [{movieid : Number,image : String,name : String,rating : Number,release : String}],
+  movierating : [{movieid : Number,image : String,name : String,rating : Number,release : String,genres : [Number]}],
   seriesrating : [{seriesid  : Number,image : String,name : String,rating : Number,release : String}]
 });
+
 const app=express();
 
 const ejsLint= require('ejs-lint');
@@ -92,23 +93,23 @@ const { isUndefined } = require("lodash");
 const { discriminator } = require("./dbmodels/User"); */
 app.get("/otaku",async (req,res) => {
     console.log(req.isAuthenticated());
-    let topanimeresponse = await fetch("https://api.jikan.moe/v3/top/anime/1/bypopularity");
+    let topanimeresponse = await fetch("https://api.jikan.moe/v4/top/anime?filter=bypopularity");
     let jsontopanime=await topanimeresponse.json();
-    let topairanime= await fetch("https://api.jikan.moe/v3/top/anime/1/airing");
+    let topairanime= await fetch("https://api.jikan.moe/v4/top/anime?filter=airing");
     let jsonairanime=await topairanime.json();
     otakuarticle.find({},function(error,docs){
       if(error)
       {
         if(req.isAuthenticated())
-          res.render("animehome",{topanimeobject :jsontopanime.top.slice(0,5),airanimeobject : jsonairanime.top.slice(0,5),postdetails : [],user : req.user});
+          res.render("animehome",{topanimeobject :jsontopanime.data.slice(0,5),airanimeobject : jsonairanime.data.slice(0,5),postdetails : [],user : req.user});
         else
-          res.render("animehome",{topanimeobject :jsontopanime.top.slice(0,5),airanimeobject : jsonairanime.top.slice(0,5),postdetails : [],user : {}});
+          res.render("animehome",{topanimeobject :jsontopanime.data.slice(0,5),airanimeobject : jsonairanime.data.slice(0,5),postdetails : [],user : {}});
       }
       else{
         if(req.isAuthenticated())
-          res.render("animehome",{topanimeobject :jsontopanime.top.slice(0,5),airanimeobject : jsonairanime.top.slice(0,5),postdetails : docs.slice(-10),user : req.user});
+          res.render("animehome",{topanimeobject :jsontopanime.data.slice(0,5),airanimeobject : jsonairanime.data.slice(0,5),postdetails : docs.slice(-10),user : req.user});
         else
-          res.render("animehome",{topanimeobject :jsontopanime.top.slice(0,5),airanimeobject : jsonairanime.top.slice(0,5),postdetails : docs.slice(-10),user : {}});     
+          res.render("animehome",{topanimeobject :jsontopanime.data.slice(0,5),airanimeobject : jsonairanime.data.slice(0,5),postdetails : docs.slice(-10),user : {}});     
       }
     });
 });
@@ -119,22 +120,23 @@ app.get("/",async (req,res) => {
 app.get("/otaku/search",async (req,res) =>
 {
     const myURL = new URL("https:/"+req.url);
-    const animeresponse = await fetch("https://api.jikan.moe/v3/search/anime"+myURL.search);
+    const animeresponse = await fetch("https://api.jikan.moe/v4/anime?q="+myURL.search.slice(3));
     const jsonanime=await animeresponse.json();
-    const mangaresponse = await fetch("https://api.jikan.moe/v3/search/manga?q="+myURL.search.slice(2));
+    //console.log(myURL.search.slice(3))
+    const mangaresponse = await fetch("https://api.jikan.moe/v4/manga?q="+myURL.search.slice(3));
     const jsonmanga=await mangaresponse.json();
-    let topanimeresponse = await fetch("https://api.jikan.moe/v3/top/anime/1/bypopularity");
+    let topanimeresponse = await fetch("https://api.jikan.moe/v4/top/anime?filter=bypopularity");
     let jsontopanime=await topanimeresponse.json();
-    let topairanime= await fetch("https://api.jikan.moe/v3/top/anime/1/airing");
+    let topairanime= await fetch("https://api.jikan.moe/v4/top/anime?filter=airing");
     let jsonairanime=await topairanime.json();
     if(req.isAuthenticated())
-      res.render("searchresult",{animeobject :jsonanime.results.slice(0,10),mangaobject :jsonmanga.results.slice(0,10),topanimeobject :jsontopanime.top.slice(0,5),airanimeobject : jsonairanime.top.slice(0,5),user : req.user});
+      res.render("searchresult",{animeobject :jsonanime.data.slice(0,10),mangaobject :jsonmanga.data.slice(0,10),topanimeobject :jsontopanime.data.slice(0,5),airanimeobject : jsonairanime.data.slice(0,5),user : req.user});
     else 
-     res.render("searchresult",{animeobject :jsonanime.results.slice(0,10),mangaobject :jsonmanga.results.slice(0,10),topanimeobject :jsontopanime.top.slice(0,5),airanimeobject : jsonairanime.top.slice(0,5),user : {}});   
+     res.render("searchresult",{animeobject :jsonanime.data.slice(0,10),mangaobject :jsonmanga.data.slice(0,10),topanimeobject :jsontopanime.data.slice(0,5),airanimeobject : jsonairanime.data.slice(0,5),user : {}});   
 });
 app.get("/otaku/anime/:animeid",async (req,res)=>{
-    const jsonanime = await fetch("https://api.jikan.moe/v3/anime/"+req.params.animeid);
-    let jsonachar=await fetch("https://api.jikan.moe/v3/anime/"+req.params.animeid+"/characters_staff");
+    const jsonanime = await fetch("https://api.jikan.moe/v4/anime/"+req.params.animeid);
+    let jsonachar=await fetch("https://api.jikan.moe/v4/anime/"+req.params.animeid+"/characters_staff");
     if(jsonanime.status===undefined || jsonachar.status===undefined) res.send("Error in loading apge");
     if(!(jsonanime.ok && jsonachar.ok)) res.send("Eror in loading page");
     let jsonchar = await jsonachar.json();
@@ -145,9 +147,9 @@ app.get("/otaku/anime/:animeid",async (req,res)=>{
       res.render("animepage",{animedataobject : jsonanimedata,refer : "anime",user : {},jsonchar : jsonchar}); 
 });
 app.get("/otaku/manga/:mangaid",async (req,res)=>{
-    const jsonmanga = await fetch("https://api.jikan.moe/v3/manga/"+req.params.mangaid);
+    const jsonmanga = await fetch("https://api.jikan.moe/v4/manga/"+req.params.mangaid);
     const jsonmangadata=await jsonmanga.json();
-    let jsonm=await fetch("https://api.jikan.moe/v3/manga/"+req.params.mangaid+"/characters");
+    let jsonm=await fetch("https://api.jikan.moe/v4/manga/"+req.params.mangaid+"/characters");
     let jsonmchar=await jsonm.json();
     if(req.isAuthenticated()) res.render("mangapage",{animedataobject : jsonmangadata,refer : "manga",user : req.user,jsonmchar : jsonmchar});
     else res.render("mangapage",{animedataobject : jsonmangadata,refer : "manga",user : {},jsonmchar : jsonmchar});
@@ -159,18 +161,19 @@ app.get("/binger",async (req,res)=>
   let jsontopmoviesww=await topmoviesww.json();
   let topseriesww= await fetch("https://api.themoviedb.org/3/trending/tv/week?api_key=6305d43a0ac191e9665db77ff87bbff1");
   let jsontopseriesww=await topseriesww.json();
+  let suggestions_res = await suggestion_helper(req,10);
 
   bingerarticle.find({},function(error,docs){
     if(error)
     {
-      if(req.isAuthenticated()) res.render("moviehome",{jsontopmoviesw:jsontopmoviesww.results.slice(0,5),jsontopseriesw:jsontopseriesww.results.slice(0,5),postdetails : [],user : req.user});
-      else res.render("moviehome",{jsontopmoviesw:jsontopmoviesww.results.slice(0,5),jsontopseriesw:jsontopseriesww.results.slice(0,5),postdetails : [],user : {}});
+      if(req.isAuthenticated()) res.render("moviehome",{jsontopmoviesw:jsontopmoviesww.results.slice(0,5),jsontopseriesw:jsontopseriesww.results.slice(0,5),postdetails : [],user : req.user,suggestions_data : suggestions_res});
+      else res.render("moviehome",{jsontopmoviesw:jsontopmoviesww.results.slice(0,5),jsontopseriesw:jsontopseriesww.results.slice(0,5),postdetails : [],user : {},suggestions_data : []});
     }
     else{
       if(req.isAuthenticated())
-      res.render("moviehome",{jsontopmoviesw:jsontopmoviesww.results.slice(0,5),jsontopseriesw:jsontopseriesww.results.slice(0,5),postdetails : docs.slice(-10),user : req.user});
+      res.render("moviehome",{jsontopmoviesw:jsontopmoviesww.results.slice(0,5),jsontopseriesw:jsontopseriesww.results.slice(0,5),postdetails : docs.slice(-10),user : req.user,suggestions_data : suggestions_res});
       else
-      res.render("moviehome",{jsontopmoviesw:jsontopmoviesww.results.slice(0,5),jsontopseriesw:jsontopseriesww.results.slice(0,5),postdetails : docs.slice(-10),user : {}});
+      res.render("moviehome",{jsontopmoviesw:jsontopmoviesww.results.slice(0,5),jsontopseriesw:jsontopseriesww.results.slice(0,5),postdetails : docs.slice(-10),user : {},suggestions_data : []});
     }
   });
 });
@@ -347,7 +350,7 @@ app.post("/login",async(req,res,next)=>{
         else{
           req.session.recaptcha_notfill = false;
           passport.authenticate("local",{
-            successRedirect : "/myaccount",
+            successRedirect : "/binger/suggestions",
             failureRedirect : "/login",
             failureFlash : true
           })(req,res,next);
@@ -356,7 +359,7 @@ app.post("/login",async(req,res,next)=>{
       }
       else{
         passport.authenticate("local",{
-          successRedirect : "/myaccount",
+          successRedirect : "/binger/suggestions",
           failureRedirect : "/login",
           failureFlash : true
         })(req,res,next);
@@ -415,9 +418,9 @@ app.get("/signout",async (req,res)=>{
   res.redirect("/");
 });
 app.get("/otaku/news/:newsid",async (req,res) => {
-  let topanimeresponse = await fetch("https://api.jikan.moe/v3/top/anime/1/bypopularity");
+  let topanimeresponse = await fetch("https://api.jikan.moe/v4/top/anime/1/bypopularity");
   let jsontopanime=await topanimeresponse.json();
-  let topairanime= await fetch("https://api.jikan.moe/v3/top/anime/1/airing");
+  let topairanime= await fetch("https://api.jikan.moe/v4/top/anime/1/airing");
   let jsonairanime=await topairanime.json();
   await otakuarticle.findOne({postid : req.params.newsid},function(err,docs){
     if(err)
@@ -561,6 +564,7 @@ app.get("/myaccount",async (req,res)=>{
       res.render("myaccount", { userinfo: req.user, ratingdata: doc }, function (err) {
         if (err) {
           console.log(err);
+          res.status(200).render("myaccount", { userinfo: req.user, ratingdata: {'movierating' : [],'seriesrating' : [],'animerating': [],'mangarating' : []} });
         }
 
         else {
@@ -667,22 +671,22 @@ app.get("/mass",async (req,res)=>
 });
 
 app.get("/otaku/top/anime/:num",async (req,res)=>{
-  let topanimeresponse = await fetch("https://api.jikan.moe/v3/top/anime/1/bypopularity");
+  let topanimeresponse = await fetch("https://api.jikan.moe/v4/top/anime/1/bypopularity");
   let jsontopanime=await topanimeresponse.json();
-  let topairanime= await fetch("https://api.jikan.moe/v3/top/anime/1/airing");
+  let topairanime= await fetch("https://api.jikan.moe/v4/top/anime/1/airing");
   let jsonairanime=await topairanime.json();
-  const topanime=await fetch("https://api.jikan.moe/v3/top/anime/"+req.params.num);
+  const topanime=await fetch("https://api.jikan.moe/v4/top/anime/"+req.params.num);
   const topanimejson=await topanime.json();
   if(req.isAuthenticated())
   res.render("topanime",{topanime : topanimejson,topanimeobject :jsontopanime.top.slice(0,5),airanimeobject : jsonairanime.top.slice(0,5),user : req.user,num : req.params.num});
   else res.render("topanime",{topanime : topanimejson,topanimeobject :jsontopanime.top.slice(0,5),airanimeobject : jsonairanime.top.slice(0,5),user : {},num : req.params.num});
 });
 app.get("/otaku/top/manga/:num",async(req,res)=>{
-  let topanimeresponse = await fetch("https://api.jikan.moe/v3/top/anime/1/bypopularity");
+  let topanimeresponse = await fetch("https://api.jikan.moe/v4/top/anime/1/bypopularity");
   let jsontopanime=await topanimeresponse.json();
-  let topairanime= await fetch("https://api.jikan.moe/v3/top/anime/1/airing");
+  let topairanime= await fetch("https://api.jikan.moe/v4/top/anime/1/airing");
   let jsonairanime=await topairanime.json();
-  const topmanga=await fetch("https://api.jikan.moe/v3/top/manga/"+req.params.num);
+  const topmanga=await fetch("https://api.jikan.moe/v4/top/manga/"+req.params.num);
   const topmangajson=await topmanga.json();
   if(req.isAuthenticated())
     res.render("topmanga",{topanime : topmangajson,topanimeobject :jsontopanime.top.slice(0,5),airanimeobject : jsonairanime.top.slice(0,5),user : req.user,num : req.params.num});
@@ -739,17 +743,13 @@ app.post("/otaku/anime/:animeid",async (req,res)=>{
   console.log(req.body);
   userrating.findOne({email : req.user.email},async (err,docs)=>{
     if(err)
-    {
-      console.log(error);
-    }
+      console.log(err);
     else
     {
         let temp=[]; 
           docs.animerating.forEach(async (item,i)=>{
             if(item.animeid==req.params.animeid)
-            {
               temp.push(1);
-            }
         });
         if(temp.length>=1)
         {
@@ -759,7 +759,7 @@ app.post("/otaku/anime/:animeid",async (req,res)=>{
           });
         }
         else{
-          let ani=await fetch("https://api.jikan.moe/v3/anime/"+req.params.animeid);
+          let ani=await fetch("https://api.jikan.moe/v4/anime/"+req.params.animeid);
           if(ani.ok){
             let anim=await ani.json();
             userrating.updateOne({"email" : req.user.email},{$push : {"animerating" : { $each : [{"animeid" : parseInt(req.params.animeid),"image" : anim.image_url,"name" : anim.title_english,"rating" : parseInt(req.body.rating),"release" : anim.aired.string}],$position : 0}}},function(err){
@@ -796,7 +796,7 @@ app.post("/otaku/manga/:mangaid",async (req,res)=>{
           });
         }
         else{
-          let man=await fetch("https://api.jikan.moe/v3/manga/"+req.params.mangaid);
+          let man=await fetch("https://api.jikan.moe/v4/manga/"+req.params.mangaid);
           if(man.ok){
           let mang=await man.json(); 
           userrating.updateOne({"email" : req.user[0].email},{$push : {"mangarating" : { $each : [{"mangaid" : parseInt(req.params.mangaid),"image" : mang.image_url,"name" : mang.title_english,"rating" : parseInt(req.body.rating),"release" : mang.published.string}],$position : 0}}},function(err){
@@ -813,18 +813,17 @@ app.post("/binger/movie/:movieid",async (req,res)=>{
   console.log(req.body);
   userrating.findOne({email : req.user.email},async (err,docs)=>{
     if(err)
-    {
-      console.log(error);
-    }
+      console.log(err);
     else
     {
+        console.log(docs);
         let temp=[]; 
-        docs.movierating.forEach(async (item,i)=>{
+        if (docs!=null){
+          docs.movierating.forEach(async (item,i)=>{
             if(item.movieid==req.params.movieid)
-            {
               temp.push(1);
-            }
-        });
+          });
+        }
         if(temp.length>=1)
         {
           temp.pop();
@@ -836,7 +835,11 @@ app.post("/binger/movie/:movieid",async (req,res)=>{
           let m= await fetch("https://api.themoviedb.org/3/movie/"+req.params.movieid+"?api_key=6305d43a0ac191e9665db77ff87bbff1");
           if(m.ok) {
             let mov=await m.json();
-            userrating.updateOne({"email" : req.user[0].email},{$push : {"movierating" : { $each : [{"movieid" : parseInt(req.params.movieid),"image" : mov.poster_path,"name" : mov.title,"rating" : parseInt(req.body.rating),"release" : mov.release_date}],$position : 0}}},function(err){
+            genres = []
+            for(let temp1=0;temp1<mov['genres'].length;temp1++)
+              genres.push(mov['genres'][temp1]['id'])
+            console.log(genres)
+              userrating.updateOne({"email" : req.user.email},{$push : {"movierating" : { $each : [{"movieid" : parseInt(req.params.movieid),"image" : mov.poster_path,"name" : mov.title,"rating" : parseInt(req.body.rating),"release" : mov.release_date,'genres' : genres}],$position : 0}}},function(err){
               if(err)
               console.log(err);
             });
@@ -951,4 +954,86 @@ bingerarticle.findOne({postid : req.params.postid},function(err,docs){
   }
 })
 });
+
+async function suggestion_helper(req,num){
+  return new Promise(async (res,rej)=>{
+    try{
+      if(req.isAuthenticated()){
+        console.log('hellll');
+        let final_db = [],movies_genre = {},movie_ids = [];
+        let suggestions = [];
+        userrating.findOne({'email' : req.user.email},async (err,docs)=>{  
+          //console.log(docs);
+          docs.movierating.forEach((item)=>{
+            for(let counter=0;counter<item.genres.length;counter++){
+              //console.log(item.genres)
+              if(item.genres[counter] in movies_genre)
+                movies_genre[item.genres[counter]]+=1;
+              else
+                movies_genre[item.genres[counter]]=1;
+              //console.log(docs.movierating);
+              if(typeof docs.movierating[counter] != 'undefined')
+                movie_ids.push(docs.movierating[counter].movieid);
+              
+            }       
+          })
+          for(let counter=0;counter<docs.movierating.length;counter++){
+            let topmoviesww = await fetch("https://api.themoviedb.org/3/movie/"+docs.movierating[counter].movieid+"/recommendations?api_key=6305d43a0ac191e9665db77ff87bbff1&language=en-US&page=1").catch(err=>console.log(err));
+            let jsontopseriesww=await topmoviesww.json();
+            final_db.push(...jsontopseriesww.results);
+          }
+          final_db.sort((a,b) => b.vote_count - a.vote_count);
+          var sort_item = Object.keys(movies_genre).map(function(key) {
+            return [key, movies_genre[key]];
+          });    
+          sort_item.sort((first, second) => (second[1] - first[1]));
+          filtered_genre_top5 = []
+
+          // Inside slice menth
+          sort_item.slice(0,3).forEach((item)=>{
+            filtered_genre_top5.push(item[0]);
+          })
+          let unique_set = new Set()
+          //console.log(filtered_genre_top5);
+          final_db.forEach((item_tmp)=>{
+            for(let j=0;j<item_tmp.genre_ids.length;j++){
+              if (filtered_genre_top5.includes(item_tmp.genre_ids[j].toString())){
+                if(!unique_set.has(item_tmp.id)){
+                  suggestions.push(item_tmp); 
+                  unique_set.add(item_tmp.id);
+                } 
+                break;
+              }
+            }
+          })
+          //res.send(suggestions.slice(0,20));
+          //console.log('set')
+          //console.log(unique_set);
+          res(suggestions.slice(0,num));
+        })
+      }
+      else 
+        res(undefined);
+    }
+    catch(err){
+        res(undefined);
+    }
+  })
+}
+
+app.get('/binger/suggestions',async (req,res)=>{
+  if(req.isAuthenticated()){
+    let suggestions_res = await suggestion_helper(req,100);
+    //console.log(suggestions_res.length);
+    if(typeof suggestions_res == 'undefined')
+      res.render('suggestions',{jsondata : [],user : req.user})
+    else
+      res.render('suggestions',{jsondata : suggestions_res, user : req.user});
+  }
+  else{
+    res.redirect('/login');
+  }
+})
+
+
 

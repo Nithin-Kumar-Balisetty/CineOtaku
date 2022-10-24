@@ -456,3 +456,10 @@ nav{
 .timeuser>p:first-child{
   margin-right: 20px;
 }
+
+#movie_card_center{
+  display: block;
+  margin-left: auto;margin-right: auto;
+  width: 50;
+  padding-top:10px;
+}

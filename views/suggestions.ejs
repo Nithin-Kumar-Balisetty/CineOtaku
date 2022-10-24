@@ -1,0 +1,41 @@
+<%- include("partials/header"); -%>
+<%var loggedin=false;%>
+<%if(typeof user.email!="undefined"){loggedin = true;}%>
+<div id="headerlogin">
+  <%if(loggedin!=true){%>
+    <a href="/login" id="login">Login</a>
+    <a href="/signup" id="signup">Sign Up</a>
+  <%}%>
+  <%if(loggedin==true){%>
+    <div id="headeruser">
+      <div><p id="signup" onclick="userbutton()"><img src="<%=user.profile_image%>" alt="not found" height="25" width="20" loading="lazy"><%=user.username+" "%><i class="arrow down"></i></p></div>
+      <div><p id="userinfo" onclick="myaccount()">My Account</p></div>
+      <div><p id="signout" onclick="signout()">Sign Out</p></div>
+    </div>
+  <%}%>
+</div>
+<%- include("partials/extra1"); -%>
+<main class="">
+  <br>
+  <h3>Suggestions</h3>
+  <hr>
+  <div class="suggestion_body" style="display:grid;grid-template-columns: 1fr 1fr 1fr 1fr;">  
+    <% jsondata.forEach((item)=>{ %>
+        <div class="card" style="margin:10px;">
+          <div id="movie_card_center">
+            <img class="card-img-top center" style="height:300px;width:200px;" src="https://image.tmdb.org/t/p/w500/<%= item.poster_path%>" alt="">
+          </div>  
+          <div class="card-body" id="movie_card_center">
+            <button class="btn btn-primary center"> <%= item.original_title %></button>
+          </div>
+        </div>
+      <% }) %>
+  </div>
+</main>
+</div>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+<script src="/scripts/animehome.js"></script>
+<script src="/scripts/otakuscript.js"></script>
+</html>
