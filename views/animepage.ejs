@@ -115,18 +115,7 @@
         </div>
         <br>
         <h3 style="font-size : 18px;border-bottom: 1.5px black solid;"><strong>Related</strong></h3>
-        <div class="related">
-            <h3 style="font-size : 1rem;">
-              <strong>Adaptations : </strong><%if(animedata.related.Adaptation==null){%>No Adaptations<%}%>
-            <%if(animedata.related.Adaptation!=null){%>
-                <%let adapt=[];%>
-                <% animedata.related.Adaptation.forEach((item,i) => { %>
-                  <%if(i!=animedata.related.Adaptation.length-1){%><a href="/otaku/<%=item.type%>/<%=item.mal_id%>" style="text-decoration : none;"><%=item.name+", "%></a><%}%>
-                  <%if(i==animedata.related.Adaptation.length-1){%><a href="/otaku/<%=item.type%>/<%=item.mal_id%>" style="text-decoration : none;"><%=item.name%></a><%}%>
-               <%})%>
-             <%}%>
-           </h3>
-        </div>
+       
         <h3 style="font-size : 18px;border-bottom: 1.5px black solid;"><strong>Characters and Voice actors</strong></h3>
         <div class="charvoice" style="display: grid; grid-template-columns: 1fr;">
             <%let count=0%>
@@ -165,7 +154,7 @@
       <div style="margin-left: 5px;">
         <h3 style="font-size : 18px;background-color: #e1e7f5;padding : 5px 0px 5px 0px;"><strong>Opening Themes</strong></h3>
         <div class="cast" style="display: grid;grid-template-columns: 1fr;">
-          <%animedata.opening_themes.forEach(async (item,i) => {%>
+          <%if(animedata.theme.openings!=null){animedata.theme.openings.forEach(async (item,i) => {%>
             <%if(i>=0){%>
             <div style="background-color: whitesmoke;margin-bottom: 10px;">
                 <div class="castmember">
@@ -173,11 +162,11 @@
                 </div>
               </div>
               <%}%>
-          <%});%>
+          <%});}%>
         </div>
         <h3 style="font-size : 18px;background-color: #e1e7f5;padding : 5px 0px 5px 0px;"><strong>Ending Themes</strong></h3>
         <div class="cast" style="display: grid;grid-template-columns: 1fr;">
-          <%animedata.ending_themes.forEach(async (item,i) => {%>
+          <%if(animedata.theme.endings!=null){animedata.theme.endings.forEach(async (item,i) => {%>
             <%if(i>=0){%>
             <div style="background-color: whitesmoke;margin-bottom: 10px;">
                 <div class="castmember">
@@ -185,7 +174,7 @@
                 </div>
               </div>
               <%}%>
-          <%});%>
+          <%});}%>
         </div>
       </div>
   </div>

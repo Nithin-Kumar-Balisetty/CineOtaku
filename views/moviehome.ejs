@@ -39,7 +39,7 @@
   <%}%>
   <%}%>
   <br>
-  <%if(suggestions_data.length != 0){ %>
+  <%if(typeof suggestions_data != 'undefined' && suggestions_data.length != 0){ %>
     <div style="border-top:2px #bebebe solid;border-bottom:2px #bebebe solid;">
       <h5 style="display:inline-block;">Suggestions</h5>
       <a style="float:right;text-decoration:none;margin-right:10px;" href="/binger/suggestions" >view more</a>

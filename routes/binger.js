@@ -1,51 +1,21 @@
-
 let express = require('express')
 const app = express.Router()
-const mongo=require("mongoose");
 const bodyParser = require("body-parser");
-const ejs = require("ejs");
-const url = require('url');
 const fetch = require('node-fetch');
 const ISO6391 = require('iso-639-1');
 
 
 app.use(express.json());
-//app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
 
-mongo.connect(process.env.MONGODB_URI||process.env.MONGOCLUSTER,{useNewUrlParser : true,useUnifiedTopology : true});
-var Schema = mongo.Schema;
-
-const articleschema=new Schema({
-    postid : Number,
-    postauthor :  String,
-    posttitle: String,
-    postdata : String,
-    postimg : String,
-    postdate : String,
-    comments : [{commentid : Number ,date: String ,profile_pic : String,username : String,commentbody : String ,reply : [{replyid : Number,date : String, profile_pic : String,username : String,replybody : String}]}]
-});
-
-const userratingschema=new Schema({
-    email : String,
-    animerating : [{animeid : Number,image : String,name : String,rating : Number,release : String}],
-    mangarating : [{mangaid : Number,image : String,name : String,rating : Number,release : String}],
-    movierating : [{movieid : Number,image : String,name : String,rating : Number,release : String}],
-    seriesrating : [{seriesid  : Number,image : String,name : String,rating : Number,release : String}]
-});
-
-const ejsLint= require('ejs-lint');
-const fs = require('fs');
-var multer  = require('multer');
 
 const User= require("../dbmodels/User")
-const bingerarticle =mongo.model("bingerarticle",articleschema);
-//const userrating = mongo.model("userrating",userratingschema);
-
+const bingerarticle =require('../dbmodels/bingerarticle');
+const userrating = require('../dbmodels/userrating');
 
 app.get("/",async (req,res)=>{
-  console.log(users);
+  console.log(req.isAuthenticated());
   let topmoviesww = await fetch("https://api.themoviedb.org/3/trending/movie/week?api_key=6305d43a0ac191e9665db77ff87bbff1").catch(err=>console.log(err));
   let jsontopmoviesww=await topmoviesww.json();
   let topseriesww= await fetch("https://api.themoviedb.org/3/trending/tv/week?api_key=6305d43a0ac191e9665db77ff87bbff1");
@@ -64,6 +34,23 @@ app.get("/",async (req,res)=>{
       res.render("moviehome",{jsontopmoviesw:jsontopmoviesww.results.slice(0,5),jsontopseriesw:jsontopseriesww.results.slice(0,5),postdetails : docs.slice(-10),user : {}});
     }
   });
+});
+
+app.post("/",async (req,res)=>{  
+  let post_data=req.body.post_data;
+  let post_img=req.body.post_img;
+  let post_title=req.body.post_title;
+  let post_author=req.body.post_author;
+  await bingerarticle.countDocuments({}, async(err, c) =>{
+    if(err)
+      console.log("error in adding the article");
+    else
+    {
+      let newarticle=new bingerarticle({"postid" : c+1,"postauthor" : post_author, "posttitle" : post_title,"postdata" : post_data,"postimg" : post_img,"postdate" : (new Date()).toLocaleString('en-US', {timeZone: 'Asia/Kolkata'}),comments : []});
+      await newarticle.save();
+    }
+  });
+  res.redirect("/binger");
 });
 
 
@@ -122,6 +109,7 @@ app.post("/news/:newsid",async (req,res)=>{
 
 app.get("/search",async (req,res)=>{
     let myURL = new URL("https:/"+req.url);
+    console.log(myURL.search);
     let movieresponse = await fetch("https://api.themoviedb.org/3/search/movie?api_key=6305d43a0ac191e9665db77ff87bbff1&"+myURL.search.slice(1)+"&page=1&include_adult=true");
     let jsonmovie=await movieresponse.json();
     let seriesresponse = await fetch("https://api.themoviedb.org/3/search/tv?api_key=6305d43a0ac191e9665db77ff87bbff1&page=1&"+myURL.search.slice(1)+"&include_adult=true");
@@ -178,16 +166,22 @@ app.get("/series/:seriesid",async(req,res)=>
       jsonseries = await fetch("https://api.themoviedb.org/3/tv/"+req.params.seriesid+"?api_key=6305d43a0ac191e9665db77ff87bbff1"); 
       let jsonseriesdata= await jsonseries.json();
       let scredits= await seriescredits.json();
-      res.render("seriespage",{moviedataobject : jsonseriesdata,type : "series",Language : ISO6391.getName(jsonseriesdata.original_language),scredits : scredits,user : req.user},async (err)=>{
+      if(req.isAuthenticated())
+      res.render("seriespage",{moviedataobject : jsonseriesdata,type : "series",Language : ISO6391.getName(jsonseriesdata.original_language),scredits : scredits,user : req.user});
+      else
+      res.render("seriespage",{moviedataobject : jsonseriesdata,type : "series",Language : ISO6391.getName(jsonseriesdata.original_language),scredits : scredits,user : {}});
+      /*res.render("seriespage",{moviedataobject : jsonseriesdata,type : "series",Language : ISO6391.getName(jsonseriesdata.original_language),scredits : scredits,user : req.user},async (err)=>{
       if(err)
         {
           console.log(err);
           res.redirect("/binger");
         }
+        else{
           if(req.isAuthenticated())
             res.render("seriespage",{moviedataobject : jsonseriesdata,type : "series",Language : ISO6391.getName(jsonseriesdata.original_language),scredits : scredits,user : req.user});
           else  res.render("seriespage",{moviedataobject : jsonseriesdata,type : "series",Language : ISO6391.getName(jsonseriesdata.original_language),scredits : scredits,user : {}});
-      });
+        }
+      });*/
   });
 
 app.get("/compose",async(req,res)=>{
@@ -203,26 +197,7 @@ app.get("/compose",async(req,res)=>{
     }
   });
 
-
-app.post("/",async (req,res)=>{
   
-    let post_data=req.body.post_data;
-    let post_img=req.body.post_img;
-    let post_title=req.body.post_title;
-    let post_author=req.body.post_author;
-    await bingerarticle.countDocuments({}, async(err, c) =>{
-      if(err)
-        console.log("error in adding the article");
-      else
-      {
-        let newarticle=new bingerarticle({"postid" : c+1,"postauthor" : post_author, "posttitle" : post_title,"postdata" : post_data,"postimg" : post_img,"postdate" : (new Date()).toLocaleString('en-US', {timeZone: 'Asia/Kolkata'}),comments : []});
-        await newarticle.save();
-      }
-    });
-    res.redirect("/binger");
-  });
-
-
 app.get("/top/series/:num",async(req,res)=>{
   const topmoviesww = await fetch("https://api.themoviedb.org/3/trending/movie/week?api_key=6305d43a0ac191e9665db77ff87bbff1").catch(err=>console.log(err));
   const jsontopmoviesww=await topmoviesww.json();
@@ -354,8 +329,6 @@ app.get("/com/:postid/:commid",async (req,res)=>{
   })
   });
 
-
-
 app.get("/top/movie/:num",async(req,res)=>{
   const topmoviesww = await fetch("https://api.themoviedb.org/3/trending/movie/week?api_key=6305d43a0ac191e9665db77ff87bbff1").catch(err=>console.log(err));
   const jsontopmoviesww=await topmoviesww.json();
@@ -368,5 +341,86 @@ app.get("/top/movie/:num",async(req,res)=>{
   else
   res.render("topmovie",{tmovie : tmovie,jsontopmoviesw:jsontopmoviesww.results.slice(0,5),jsontopseriesw:jsontopseriesww.results.slice(0,5),user : {},num : req.params.num}); 
 });
+
+async function suggestion_helper(req,num){
+  return new Promise(async (res,rej)=>{
+    try{
+      if(req.isAuthenticated()){
+        console.log('hellll');
+        let final_db = [],movies_genre = {},movie_ids = [];
+        let suggestions = [];
+        userrating.findOne({'email' : req.user.email},async (err,docs)=>{  
+          //console.log(docs);
+          docs.movierating.forEach((item)=>{
+            for(let counter=0;counter<item.genres.length;counter++){
+              //console.log(item.genres)
+              if(item.genres[counter] in movies_genre)
+                movies_genre[item.genres[counter]]+=1;
+              else
+                movies_genre[item.genres[counter]]=1;
+              //console.log(docs.movierating);
+              if(typeof docs.movierating[counter] != 'undefined')
+                movie_ids.push(docs.movierating[counter].movieid);
+              
+            }       
+          })
+          for(let counter=0;counter<docs.movierating.length;counter++){
+            let topmoviesww = await fetch("https://api.themoviedb.org/3/movie/"+docs.movierating[counter].movieid+"/recommendations?api_key=6305d43a0ac191e9665db77ff87bbff1&language=en-US&page=1").catch(err=>console.log(err));
+            let jsontopseriesww=await topmoviesww.json();
+            final_db.push(...jsontopseriesww.results);
+          }
+          final_db.sort((a,b) => b.vote_count - a.vote_count);
+          var sort_item = Object.keys(movies_genre).map(function(key) {
+            return [key, movies_genre[key]];
+          });    
+          sort_item.sort((first, second) => (second[1] - first[1]));
+          filtered_genre_top5 = []
+
+          // Inside slice menth
+          sort_item.slice(0,3).forEach((item)=>{
+            filtered_genre_top5.push(item[0]);
+          })
+          let unique_set = new Set()
+          //console.log(filtered_genre_top5);
+          final_db.forEach((item_tmp)=>{
+            for(let j=0;j<item_tmp.genre_ids.length;j++){
+              if (filtered_genre_top5.includes(item_tmp.genre_ids[j].toString())){
+                if(!unique_set.has(item_tmp.id)){
+                  suggestions.push(item_tmp); 
+                  unique_set.add(item_tmp.id);
+                } 
+                break;
+              }
+            }
+          })
+          //res.send(suggestions.slice(0,20));
+          //console.log('set')
+          //console.log(unique_set);
+          res(suggestions.slice(0,num));
+        })
+      }
+      else 
+        res(undefined);
+    }
+    catch(err){
+        res(undefined);
+    }
+  })
+}
+
+app.get('/suggestions',async (req,res)=>{
+  if(req.isAuthenticated()){
+    let suggestions_res = await suggestion_helper(req,100);
+    //console.log(suggestions_res.length);
+    if(typeof suggestions_res == 'undefined')
+      res.render('suggestions',{jsondata : [],user : req.user})
+    else
+      res.render('suggestions',{jsondata : suggestions_res, user : req.user});
+  }
+  else{
+    res.redirect('/login');
+  }
+})
+
 
 module.exports = app
