@@ -1,11 +1,13 @@
 {
-  "name": "finalproject",
+  "name": "cineotaku",
   "version": "1.0.0",
   "description": "social catlog website",
   "main": "app.js",
+  "repository": "https://github.com/nithinkumarbalisetty98/CineOtaku",
+  "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js"
+    "start": "node app.js"
   },
   "author": "Team 27",
   "license": "ISC",
