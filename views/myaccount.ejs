@@ -77,12 +77,13 @@
       <div style="border-bottom: 2px #bebebe solid;">
       </div>
     </div>
-    <div>
+    <h3>My Ratings</h3>
+      <div>
       <div class="fourtypes">
         <p onclick="trigger(this)">Movies</p>
         <p onclick="trigger(this)">Series</p>
-        <p onclick="trigger(this)">Anime</p>
-        <p onclick="trigger(this)">Manga</p>
+        <!-- <p onclick="trigger(this)">Anime</p>
+        <p onclick="trigger(this)">Manga</p> -->
       </div>
       <div class="gridsystem1">
         <p>S.No</p>
@@ -153,7 +154,7 @@
           </div>
       <%});%>
       </div>
-      <div class="animeratings">
+      <!-- <div class="animeratings">
         
         <%if(urdata.animerating.length==0){%>
           <div>
@@ -216,8 +217,155 @@
             </div>
           </div>
           <%});%>
-      </div>
+      </div> -->
     </div>
+    <br>
+    <h3>My Watch List</h3>
+    <hr>
+  
+          <div>
+            <div class="fourtypes">
+              <p onclick="trigger(this)">Movies</p>
+              <p onclick="trigger(this)">Series</p>
+              <!-- <p onclick="trigger(this)">Anime</p>
+              <p onclick="trigger(this)">Manga</p> -->
+            </div>
+            <div class="gridsystem1">
+              <p>S.No</p>
+              <p>Image</p>
+              <p>Name</p>
+              <!-- <p>Your Rating</p>
+              <p>Release</p> -->
+            </div>
+            <div class="movieratings">
+                <%if(watchlistdata.moviewatchlist.length==0){%>
+                <div class="grid1">
+                  <p style="text-align: center;">
+                      No movies are in Watchlist 
+                  </p>
+                </div>
+                <%}%>
+                <%watchlistdata.moviewatchlist.forEach(async (item,i)=>{%>
+                    <div class="grid2">
+                      <div>
+                          <%=(i+1)%>
+                      </div>
+                      <div>
+                        <%if(item.image!=undefined){%>
+                          <img src="https://image.tmdb.org/t/p/original<%=item.image%>" height="150px" width="150px" loading="lazy"><%}%>
+                          <%if(item.image==undefined){%>
+                            <img src="https://www.planetf1.com/content/themes/planet/img/no_image.jpg" height="150px" width="150px" loading="lazy"><%}%>
+                      </div>
+                      <div>
+                        <a href="/binger/movie/<%=item.movieid%>"><%=item.name%></a>
+                      </div>
+                     <!-- <div>
+                          <%=item.rating%>
+                      </div>
+                      <div>
+                        <%=item.release%>
+                      </div> -->
+                    </div>
+                <%});%>
+            </div>
+            <div class="seriesratings">
+              <%if(watchlistdata.serieswatchlist.length==0){%>
+                <div>
+                  <p class="grid1" style="text-align: center;">
+                      No Series are rated 
+                  </p>
+                </div>
+              <%}%>
+              <%watchlistdata.serieswatchlist.forEach(async (item,i)=>{%>
+                <div class="grid2">
+                  <div>
+                      <%=(i+1)%>
+                  </div>
+                  <div>
+                    <%if(item.image!=undefined){%>
+                      <img src="https://image.tmdb.org/t/p/original<%=item.image%>" height="150px" width="150px" loading="lazy"><%}%>
+                      <%if(item.image==undefined){%>
+                        <img src="https://www.planetf1.com/content/themes/planet/img/no_image.jpg" height="150px" width="150px" loading="lazy"><%}%>
+                  </div>
+                  <div>
+                    <a href="/binger/series/<%=item.seriesid%>"><%=item.name%></a>
+                  </div>
+                  <!-- <div>
+                      <%=item.rating%>
+                  </div>
+                  <div>
+                    <%=item.release%>
+                  </div> -->
+                </div>
+            <%});%>
+            </div>
+            <!-- <div class="animeratings">
+              
+              <%if(urdata.animerating.length==0){%>
+                <div>
+                  <p class="grid1" style="text-align: center;">
+                      No anime are rated 
+                  </p>
+                </div>
+              <%}%>
+              <%urdata.animerating.forEach(async (item,i)=>{%>
+                <div class="grid2">
+                  <div>
+                      <%=(i+1)%>
+                  </div>
+                  <div>
+                    <%if(item.image!=undefined){%>
+                      <img src="<%=item.image%>" height="150px" width="150px" loading="lazy"><%}%>
+                      <%if(item.image==undefined){%>
+                        <img src="https://www.planetf1.com/content/themes/planet/img/no_image.jpg" height="150px" width="150px" loading="lazy"><%}%>
+                  </div>
+                  <div>
+                    <a href="/otaku/anime/<%=item.animeid%>"><%=item.name%></a>
+                  </div>
+                  <div>
+                      <%=item.rating%>
+                  </div>
+                  <div>
+                    <%=item.release%>
+                  </div>
+                </div>
+            <%});%>
+
+            </div>
+            <div class="mangaratings">
+              <%if(urdata.mangarating.length==0){%>
+                <div>
+                  <p class="grid1" style="text-align: center;">
+                      No Manga are rated 
+                  </p>
+                </div>
+              <%}%>
+              <%urdata.mangarating.forEach(async (item,i)=>{%>
+                <div class="grid2">
+                  <div>
+                      <%=(i+1)%>
+                  </div>
+                  <div>
+                    <%if(item.image!=undefined){%>
+                      <img src="<%=item.image%>" height="150px" width="150px" loading="lazy"><%}%>
+                      <%if(item.image==undefined){%>
+                        <img src="https://www.planetf1.com/content/themes/planet/img/no_image.jpg" height="150px" width="150px" loading="lazy"><%}%>
+                  </div>
+                  <div>
+                    <a href="/otaku/manga/<%=item.mangaid%>"><%=item.name%></a>
+                  </div>
+                  <div>
+                      <%=item.rating%>
+                  </div>
+                  <div>
+                    <%=item.release%>
+                  </div>
+                </div>
+                <%});%>
+            </div> -->
+          </div>
+
+    
   </div>
 </main>
 </div>

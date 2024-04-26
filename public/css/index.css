@@ -330,8 +330,10 @@ nav{
 }
 .fourtypes{
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
   border-bottom: 2px #bebebe solid;
+  border-top: 2px #bebebe solid;
+
 }
 .fourtypes p{
   border-right: 2px #bebebe solid;

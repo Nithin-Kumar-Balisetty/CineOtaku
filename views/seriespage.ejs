@@ -64,22 +64,34 @@
             <%if(typeof moviedata.episode_run_time !="undefined"){%>
             <h3 style="font-size : 18px;"><strong>Episode Runtime : </strong> <%=moviedata.episode_run_time[0]%> minutes</h3><%}%>
           </div>
+          <div style="display: flex;gap:20px;">
+            <div>
+              <label for="rating"><h3 style="font-size : 18px;"><strong>Your rating : </strong></h3></label>
+              <select name="rate" id="urating" disabled ="disabled">
+                <% let ratings= ['10 (Masterpiece)','9 (Great)','8 (Very Good)','7 (Good)','6 (Fine)','5 (Average)','4 (Bad)','3 (Very Bad)','2 (Horrible)','1 (Appalling)']; %>
+
+                <% for(let i=10;i>=1;i--){%>
+                  <% console.log(movierating);%>
+                <% if(movierating && (movierating.rating === i)){%>
+                  <option value="<%=i%>" selected="selected"><%= ratings[ratings.length-i] %></option>
+                  <%} else{ %>
+                    <option value="<%=i%>"><%= ratings[ratings.length-i] %></option>
+                  <%}%>
+                  
+
+                <%}%>
+            </select>
+            <button id="button1" disabled="disabled">Rate it</button>
+          </div>
           <div>
-            <label for="rating"><h3 style="font-size : 18px;"><strong>Your rating : </strong></h3></label>
-            <select name="rate" id="urating" disabled ="disabled">
-              <option value="10">10 (Masterpiece)</option>
-              <option value="9">9 (Great)</option>
-              <option value="8">8 (Very Good)</option>
-              <option value="7">7 (Good)</option>
-              <option value="6">6 (Fine)</option>
-              <option value="5">5 (Average)</option>
-              <option value="4">4 (Bad)</option>
-              <option value="3">3 (Very Bad)</option>
-              <option value="2">2 (Horrible)</option>
-              <option value="1">1 (Appalling)</option>
-           </select>
-           <button id="button1" disabled="disabled">Rate it</button>
-        </div>
+            <% if(!watchlistratings){%>
+              <button id='button2' disabled='disabled' style="background-color:#4f74c8;color:white;">Add to Watch List</button>
+
+              <% } else{%>
+                <button id='button2' style="background-color:#4f74c8;color:white;">Remove from Watch List</button>
+              <% } %>
+          </div>
+      </div>
         </div>
       </div>
       <div class="rightsection">
@@ -231,6 +243,7 @@ function seasonclick(i)
 var bool=<%-loggedin%>;
   if(bool)
   {
+    // FOR User rating
     $("#button1").removeAttr("disabled");
     $("#urating").removeAttr("disabled");
     $("#button1").click(function(){
@@ -247,6 +260,25 @@ var bool=<%-loggedin%>;
     }).done(function(data){
       document.getElementById("button1").innerText="Rated "+data.rating;
     });
+   })
+
+   // FOR Movie or Series Watchlist option
+   $("#button2").removeAttr("disabled");
+    $("#button2").click(function(){
+    $.ajax({
+      url : window.location.href,
+      type : "PUT",
+      data : {
+        watchlist : true
+      },success: function(data,status){
+        if($("#button2").text() === 'Add to Watch List') $("#button2").text("Remove from Watch List");
+        else $("#button2").text('Add to Watch List');
+      },
+      error : function(err)
+      {
+        console.log(err);
+      }
+    })
    })
   }
 </script>

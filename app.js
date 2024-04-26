@@ -14,7 +14,7 @@ mongo.connect(process.env.MONGODB_URI||process.env.MONGOCLUSTER,{useNewUrlParser
 
 const User= require("./dbmodels/User")
 const userrating = require("./dbmodels/userrating");
-
+const watchlist = require('./dbmodels/watchlist');
 const app=express();
 app.listen(process.env.PORT||3000,(req,res) => console.log("Running server at port 3000"));
 
@@ -96,6 +96,7 @@ function authenicatedto(req, res, next) {
 }
 
 const { stringify } = require('querystring');
+const req = require("express/lib/request");
 
 app.post("/login",async(req,res,next)=>{
   if(req.body.semail==null){
@@ -198,14 +199,6 @@ app.get("/signout",async (req,res)=>{
   res.redirect("/");
 });
 
-
-/*function dategen()
-{
-  let d = new Date();
-  let month=["January","Febuary","March","April","June","July","August","September","October","Novmeber","December"];
-  return d.getDate()+" "+month[d.getMonth()]+" "+d.getFullYear();
-} */
-
 var storage = multer.diskStorage({
   destination: "./public/uploads",
   filename : async  (req, file, cb)=> {
@@ -261,18 +254,19 @@ const upload = multer({
 app.get("/myaccount",async (req,res)=>{
   if(req.isAuthenticated())
   {
+    const watchlistdata = await watchlist.findOne({ email : req.user.email });
     userrating.findOne({email : req.user.email},async (err,doc)=>
     {
       if(err)
         console.log("Error in find mongo method");
-      res.render("myaccount", { userinfo: req.user, ratingdata: doc }, function (err) {
+      res.render("myaccount", { userinfo: req.user, ratingdata: doc,watchlistdata : watchlistdata }, function (err) {
         if (err) {
           console.log(err);
-          res.status(200).render("myaccount", { userinfo: req.user, ratingdata: {'movierating' : [],'seriesrating' : [],'animerating': [],'mangarating' : []} });
+          res.status(200).render("myaccount", { userinfo: req.user, ratingdata: {'movierating' : [],'seriesrating' : [],'animerating': [],'mangarating' : []},watchlistdata : watchlistdata });
         }
 
-        else 
-          res.status(200).render("myaccount", { userinfo: req.user, ratingdata: doc });
+        else
+          res.status(200).render("myaccount", { userinfo: req.user, ratingdata: doc,watchlistdata : watchlistdata });
       });
     });
   }
@@ -289,42 +283,6 @@ app.post("/myaccountpi",async(req,res)=>{
     res.redirect("/accprofilephoto");
   });
 });
-
-
-// comments : [{commentid : Number ,date: String ,username : String,commentbody : String ,reply : [{replyid : Number,date : String, username : String,replybody : String}]}]
-/* var today = new Date();
-var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-console.log(time);
-
-var DateDiff = {
-
-  inDays: function(d1, d2) {
-      var t2 = d2.getTime();
-      var t1 = d1.getTime();
-
-      return parseInt((t2-t1)/(24*3600*1000));
-  },
-
-  inWeeks: function(d1, d2) {
-      var t2 = d2.getTime();
-      var t1 = d1.getTime();
-
-      return parseInt((t2-t1)/(24*3600*1000*7));
-  },
-
-  inMonths: function(d1, d2) {
-      var d1Y = d1.getFullYear();
-      var d2Y = d2.getFullYear();
-      var d1M = d1.getMonth();
-      var d2M = d2.getMonth();
-
-      return (d2M+12*d2Y)-(d1M+12*d1Y);
-  },
-
-  inYears: function(d1, d2) {
-      return d2.getFullYear()-d1.getFullYear();
-  }
-} */
 
 app.get("/accprofilephoto",async (req,res)=>
 {
@@ -351,6 +309,8 @@ app.post("/accpasschange", function(req,res){
     }
   })
 });
+
+
 
 
 

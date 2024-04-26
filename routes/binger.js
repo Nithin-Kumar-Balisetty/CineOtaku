@@ -13,6 +13,7 @@ app.use(express.static("public"));
 const User= require("../dbmodels/User")
 const bingerarticle =require('../dbmodels/bingerarticle');
 const userrating = require('../dbmodels/userrating');
+const watchlist = require('../dbmodels/watchlist')
 
 app.get("/",async (req,res)=>{
   console.log(req.isAuthenticated());
@@ -154,9 +155,42 @@ app.get("/movie/:movieid",async (req,res)=>{
       let mcredits = await moviecredits.json();
       jsonmovie = await fetch(" https://api.themoviedb.org/3/movie/"+req.params.movieid+"?api_key=6305d43a0ac191e9665db77ff87bbff1");
       let jsonmoviedata=await jsonmovie.json();
+
+      let movierating = null;
+
+      if(req.isAuthenticated()){
+        let temp = await userrating.aggregate([{ $match: { email : req.user.email } },
+          // Unwind the movieratings array
+          { $unwind: '$movierating' },
+          // Match the specific movieId within the unwound movieratings array
+          { $match: { 'movierating.movieid': parseInt(req.params.movieid) } },
+          // Project to include only the matching movieratings list item
+          { $project: { _id: 0, movierating: '$movierating' } }]);
+
+        if(temp.length === 0) movierating = null;
+        else movierating = temp[0].movierating; 
+        console.log(movierating);
+      }
+
+      let watchlistratings = null;
+
+      if(req.isAuthenticated()){
+        let temp = await watchlist.aggregate([{ $match: { email : req.user.email } },
+          // Unwind the movieratings array
+          { $unwind: '$moviewatchlist' },
+          // Match the specific movieId within the unwound movieratings array
+          { $match: { 'moviewatchlist.movieid': parseInt(req.params.movieid) } },
+          // Project to include only the matching movieratings list item
+          { $project: { _id: 0, moviewatchlist: '$moviewatchlist' } }]);
+
+        if(temp.length === 0) watchlistratings = null;
+        else watchlistratings = temp[0].moviewatchlist; 
+        console.log(watchlistratings);
+      }
+      
       if(req.isAuthenticated())
-      res.render("moviepage",{moviedataobject : jsonmoviedata,type : "movie",Language : ISO6391.getName(jsonmoviedata.original_language),mcredits : mcredits,user : req.user});
-      else res.render("moviepage",{moviedataobject : jsonmoviedata,type : "movie",Language : ISO6391.getName(jsonmoviedata.original_language),mcredits : mcredits,user : {}});
+        res.render("moviepage",{moviedataobject : jsonmoviedata,type : "movie",Language : ISO6391.getName(jsonmoviedata.original_language),mcredits : mcredits,user : req.user,movierating : movierating,watchlistratings : watchlistratings});
+      else res.render("moviepage",{moviedataobject : jsonmoviedata,type : "movie",Language : ISO6391.getName(jsonmoviedata.original_language),mcredits : mcredits,user : {},movierating : null, watchlistratings : null});
   });
 
 
@@ -166,10 +200,47 @@ app.get("/series/:seriesid",async(req,res)=>
       jsonseries = await fetch("https://api.themoviedb.org/3/tv/"+req.params.seriesid+"?api_key=6305d43a0ac191e9665db77ff87bbff1"); 
       let jsonseriesdata= await jsonseries.json();
       let scredits= await seriescredits.json();
+
+
+      let movierating = null;
+
+      if(req.isAuthenticated()){
+        let temp = await userrating.aggregate([{ $match: { email : req.user.email } },
+          // Unwind the movieratings array
+          { $unwind: '$seriesrating' },
+          // Match the specific movieId within the unwound movieratings array
+          { $match: { 'seriesrating.seriesid': parseInt(req.params.seriesid) } },
+          // Project to include only the matching movieratings list item
+          { $project: { _id: 0, seriesrating: '$seriesrating' } }]);
+
+        if(temp.length === 0) movierating = null;
+        else movierating = temp[0].seriesrating; 
+        console.log(movierating);
+      }
+
+      let watchlistratings = null;
+
+      if(req.isAuthenticated()){
+        let temp = await watchlist.aggregate([{ $match: { email : req.user.email } },
+          // Unwind the movieratings array
+          { $unwind: '$serieswatchlist' },
+          // Match the specific movieId within the unwound movieratings array
+          { $match: { 'serieswatchlist.seriesid': parseInt(req.params.seriesid) } },
+          // Project to include only the matching movieratings list item
+          { $project: { _id: 0, serieswatchlist: '$serieswatchlist' } }]);
+        
+        if(temp.length === 0) watchlistratings = null;
+        else watchlistratings = temp[0].serieswatchlist; 
+        console.log('#####');
+        console.log(temp);
+        console.log(watchlistratings);
+        console.log('####');
+      }
+
       if(req.isAuthenticated())
-      res.render("seriespage",{moviedataobject : jsonseriesdata,type : "series",Language : ISO6391.getName(jsonseriesdata.original_language),scredits : scredits,user : req.user});
+      res.render("seriespage",{moviedataobject : jsonseriesdata,type : "series",Language : ISO6391.getName(jsonseriesdata.original_language),scredits : scredits,user : req.user,movierating : movierating,watchlistratings : watchlistratings});
       else
-      res.render("seriespage",{moviedataobject : jsonseriesdata,type : "series",Language : ISO6391.getName(jsonseriesdata.original_language),scredits : scredits,user : {}});
+      res.render("seriespage",{moviedataobject : jsonseriesdata,type : "series",Language : ISO6391.getName(jsonseriesdata.original_language),scredits : scredits,user : {},movierating : null,watchlistratings : null});
       /*res.render("seriespage",{moviedataobject : jsonseriesdata,type : "series",Language : ISO6391.getName(jsonseriesdata.original_language),scredits : scredits,user : req.user},async (err)=>{
       if(err)
         {
@@ -205,12 +276,16 @@ app.get("/top/series/:num",async(req,res)=>{
   const jsontopseriesww=await topseriesww.json();
   let topmovie=await fetch("https://api.themoviedb.org/3/tv/top_rated?api_key=6305d43a0ac191e9665db77ff87bbff1&page="+req.params.num);
   let tmovie = await topmovie.json();
+  console.log("request made");
+  console.log(req.originalUrl);
+  console.log(tmovie);
   if(req.isAuthenticated())
     res.render("topseries",{tmovie : tmovie,jsontopmoviesw:jsontopmoviesww.results.slice(0,5),jsontopseriesw:jsontopseriesww.results.slice(0,5),user : req.user,num : req.params.num}); 
   else
     res.render("topseries",{tmovie : tmovie,jsontopmoviesw:jsontopmoviesww.results.slice(0,5),jsontopseriesw:jsontopseriesww.results.slice(0,5),user : {},num : req.params.num}); 
 
 });
+
 
 app.get("/mass/:num",async(req,res)=>{
   const topmoviesww = await fetch("https://api.themoviedb.org/3/trending/movie/week?api_key=6305d43a0ac191e9665db77ff87bbff1").catch(err=>console.log(err));
@@ -229,10 +304,7 @@ app.get("/mass/:num",async(req,res)=>{
 app.post("/movie/:movieid",async (req,res)=>{ 
     console.log(req.body);
     userrating.findOne({email : req.user.email},async (err,docs)=>{
-      if(err)
-      {
-        console.log(error);
-      }
+      if(err)  console.log(err);
       else
       {
           let temp=[]; 
@@ -253,7 +325,7 @@ app.post("/movie/:movieid",async (req,res)=>{
             let m= await fetch("https://api.themoviedb.org/3/movie/"+req.params.movieid+"?api_key=6305d43a0ac191e9665db77ff87bbff1");
             if(m.ok) {
               let mov=await m.json();
-              userrating.updateOne({"email" : req.user[0].email},{$push : {"movierating" : { $each : [{"movieid" : parseInt(req.params.movieid),"image" : mov.poster_path,"name" : mov.title,"rating" : parseInt(req.body.rating),"release" : mov.release_date}],$position : 0}}},function(err){
+              userrating.updateOne({"email" : req.user.email},{$push : {"movierating" : { $each : [{"movieid" : parseInt(req.params.movieid),"image" : mov.poster_path,"name" : mov.title,"rating" : parseInt(req.body.rating),"release" : mov.release_date}],$position : 0}}},function(err){
                 if(err)
                 console.log(err);
               });
@@ -262,6 +334,47 @@ app.post("/movie/:movieid",async (req,res)=>{
       }
     })
   });
+
+
+app.put('/movie/:movieid',async (req,res)=>{
+  if(req.isAuthenticated()){
+    let temp = await watchlist.aggregate([{ $match: { email : req.user.email } },
+      // Unwind the movieratings array
+      { $unwind: '$moviewatchlist' },
+      // Match the specific movieId within the unwound movieratings array
+      { $match: { 'moviewatchlist.movieid': parseInt(req.params.movieid) } },
+      // Project to include only the matching movieratings list item
+      { $project: { _id: 0, moviewatchlist: '$moviewatchlist' } }]);
+
+    if(temp.length === 0){
+      let m= await fetch("https://api.themoviedb.org/3/movie/"+req.params.movieid+"?api_key=6305d43a0ac191e9665db77ff87bbff1");
+      let mov=await m.json();
+      watchlist.updateOne({"email" : req.user.email},{$push : {"moviewatchlist" : { $each : [{"movieid" : parseInt(req.params.movieid),"image" : mov.poster_path,"name" : mov.title,"release" : mov.release_date}],$position : 0}}},function(err){
+        if(err)
+        console.log(err);
+      });
+    }
+    else{
+      const filter = { email: req.user.email, 'moviewatchlist.movieid': req.params.movieid };
+
+      // Specify the update operation to remove the specific moviewatchlist item
+      const update = { $pull: { moviewatchlist: { movieid: req.params.movieid } } };
+
+      // Set the option to return the modified document after update
+      const options = { new: true };
+
+      // Perform the update operation
+      const updatedDocument = await watchlist.findOneAndUpdate(filter, update, options);
+    }
+    
+    res.send('Success');
+}
+else{
+  res.send('Failure');
+}
+});
+
+
 
 app.post("/series/:seriesid",async (req,res)=>{ 
     console.log(req.body);
@@ -299,6 +412,45 @@ app.post("/series/:seriesid",async (req,res)=>{
       }
     })
   });
+
+app.put("/series/:seriesid",async (req,res)=>{
+  if(req.isAuthenticated()){
+    let temp = await watchlist.aggregate([{ $match: { email : req.user.email } },
+      // Unwind the movieratings array
+      { $unwind: '$serieswatchlist' },
+      // Match the specific movieId within the unwound movieratings array
+      { $match: { 'serieswatchlist.seriesid': parseInt(req.params.seriesid) } },
+      // Project to include only the matching movieratings list item
+      { $project: { _id: 0, serieswatchlist: '$serieswatchlist' } }]);
+
+    if(temp.length === 0){
+      let m= await fetch("https://api.themoviedb.org/3/tv/"+req.params.seriesid+"?api_key=6305d43a0ac191e9665db77ff87bbff1");
+      let mov=await m.json();
+      watchlist.updateOne({"email" : req.user.email},{$push : {"serieswatchlist" : { $each : [{"seriesid" : parseInt(req.params.seriesid),"image" : mov.poster_path,"name" : mov.name,"release" : mov.first_air_date+" to "+mov.last_air_date}],$position : 0}}},function(err){
+        if(err)
+        console.log(err);
+      });
+    }
+    else{
+      const filter = { email: req.user.email, 'serieswatchlist.seriesid': req.params.seriesid };
+
+      // Specify the update operation to remove the specific moviewatchlist item
+      const update = { $pull: { serieswatchlist: { seriesid: req.params.seriesid } } };
+
+      // Set the option to return the modified document after update
+      const options = { new: true };
+
+      // Perform the update operation
+      const updatedDocument = await watchlist.findOneAndUpdate(filter, update, options);
+    }
+    
+    res.send('Success');
+}
+else{
+  res.send('Failure');
+}
+})
+
 
 
 app.get("/com/:postid",async (req,res)=>{
@@ -408,6 +560,7 @@ async function suggestion_helper(req,num){
   })
 }
 
+
 app.get('/suggestions',async (req,res)=>{
   if(req.isAuthenticated()){
     let suggestions_res = await suggestion_helper(req,100);
@@ -421,6 +574,7 @@ app.get('/suggestions',async (req,res)=>{
     res.redirect('/login');
   }
 })
+
 
 
 module.exports = app

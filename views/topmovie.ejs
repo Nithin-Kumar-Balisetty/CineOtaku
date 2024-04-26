@@ -31,7 +31,7 @@
             </div>
             <%tmovie.results.forEach(async (item,i)=>{%>
                 <div class="airing1" style="text-align: center;">
-                    <div class="number"><p><%=i+1+(20*(ta-1))%></p></div>
+                    <div class="number"><p><%=(i+1+(20*(ta-1)))%></p></div>
                     <%if(typeof tmovie=='undefined'){%>
                         <div class="imageair"><img src="https://www.planetf1.com/content/themes/planet/img/no_image.jpg" alt="" height="150px" width="150px"></div><%}%>
                       <%if(typeof tmovie!='undefined'){%>
