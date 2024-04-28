@@ -183,6 +183,7 @@ app.post("/login",async(req,res,next)=>{
       nuser.save();
       let nuserrate=new userrating({email : email,animerating : [],mangarating : [],movierating : [],seriesrating : []});
       nuserrate.save();
+      (new watchlist({email : email , animewatchlist : [], mangawatchlist : [], moviewatchlist : [], serieswatchlist : []})).save();
       res.redirect("/login");
     }
   }

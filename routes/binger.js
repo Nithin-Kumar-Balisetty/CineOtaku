@@ -14,6 +14,7 @@ const User= require("../dbmodels/User")
 const bingerarticle =require('../dbmodels/bingerarticle');
 const userrating = require('../dbmodels/userrating');
 const watchlist = require('../dbmodels/watchlist')
+const Feedback = require('../dbmodels/feedback');
 
 app.get("/",async (req,res)=>{
   console.log(req.isAuthenticated());
@@ -325,7 +326,10 @@ app.post("/movie/:movieid",async (req,res)=>{
             let m= await fetch("https://api.themoviedb.org/3/movie/"+req.params.movieid+"?api_key=6305d43a0ac191e9665db77ff87bbff1");
             if(m.ok) {
               let mov=await m.json();
-              userrating.updateOne({"email" : req.user.email},{$push : {"movierating" : { $each : [{"movieid" : parseInt(req.params.movieid),"image" : mov.poster_path,"name" : mov.title,"rating" : parseInt(req.body.rating),"release" : mov.release_date}],$position : 0}}},function(err){
+              let genres = [];
+              for(let i=0;i<mov.genres.length;i++)
+                genres.push(mov.genres[i].id)
+              userrating.updateOne({"email" : req.user.email},{$push : {"movierating" : { $each : [{"genres" : genres,"movieid" : parseInt(req.params.movieid),"image" : mov.poster_path,"name" : mov.title,"rating" : parseInt(req.body.rating),"release" : mov.release_date}],$position : 0}}},function(err){
                 if(err)
                 console.log(err);
               });
@@ -381,7 +385,7 @@ app.post("/series/:seriesid",async (req,res)=>{
     userrating.findOne({email : req.user.email},async (err,docs)=>{
       if(err)
       {
-        console.log(error);
+        console.log(err);
       }
       else
       {
@@ -497,8 +501,8 @@ app.get("/top/movie/:num",async(req,res)=>{
 async function suggestion_helper(req,num){
   return new Promise(async (res,rej)=>{
     try{
+      console.log('Entering')
       if(req.isAuthenticated()){
-        console.log('hellll');
         let final_db = [],movies_genre = {},movie_ids = [];
         let suggestions = [];
         userrating.findOne({'email' : req.user.email},async (err,docs)=>{  
@@ -548,6 +552,7 @@ async function suggestion_helper(req,num){
           //res.send(suggestions.slice(0,20));
           //console.log('set')
           //console.log(unique_set);
+          console.log(suggestions);
           res(suggestions.slice(0,num));
         })
       }
@@ -563,7 +568,7 @@ async function suggestion_helper(req,num){
 
 app.get('/suggestions',async (req,res)=>{
   if(req.isAuthenticated()){
-    let suggestions_res = await suggestion_helper(req,100);
+    let suggestions_res = await suggestion_helper(req,20);
     //console.log(suggestions_res.length);
     if(typeof suggestions_res == 'undefined')
       res.render('suggestions',{jsondata : [],user : req.user})
@@ -576,5 +581,37 @@ app.get('/suggestions',async (req,res)=>{
 })
 
 
+app.get('/feedback',(req,res)=>{
+  if(req.isAuthenticated()){
+    if(req.user.email === process.env.MASTER){
+      Feedback.find({}, (err, items) => {
+        if (err) {
+          console.error(err);
+          res.redirect('/binger');
+        } else {
+          console.log(items);
+          res.render('admin_feedback',{feedback : items});
+        }
+      });
+    }
+    else res.render('feedback',{});
+  }
+  else
+    res.redirect('/login');
+})
+
+app.post('/feedback',async (req,res)=>{
+  console.log('POsted');
+
+  if(req.user.email === process.env.MASTER){
+    console.log('POsted');
+    const result = await Feedback.deleteMany({email : req.body.email , username : req.body.username, personal_email : req.body.personal_email, feedback : req.body.feedback});
+    res.redirect('/binger/feedback');
+  }
+  else{
+    (new Feedback({email : req.user.email, username : req.user.username, personal_email : req.body.email, feedback : req.body.feedback})).save();
+    res.redirect('/binger/feedback');
+  }
+})
 
 module.exports = app
